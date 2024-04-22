@@ -22,16 +22,18 @@ import "../App.css";
 import React from "react";
 
 interface Reservation {
+  id: string;
   emp_id: number;
-  res_id: string;
+  emp_name: string;
   client_name: string;
   client_number: string;
   client_detailedAdd: string;
   client_city: string;
   client_province: string;
-  emp_name: string;
-  service_title: string;
-  contract_term: string;
+  service_id: string;
+  service_name: string;
+  term_id: string;
+  term_name: string;
   date: string;
   time: string;
 }
@@ -88,7 +90,7 @@ export default function ReservationList() {
       await api.put(`/reservations.php`, updatedReservation);
 
       const updatedReservations = reservations.map((r) =>
-        r.res_id === currentReservation.res_id ? updatedReservation : r
+        r.id === currentReservation.id ? updatedReservation : r
       );
 
       setReservations(updatedReservations);
@@ -102,10 +104,10 @@ export default function ReservationList() {
         "Are you sure you want to delete this reservation?"
       );
       if (confirmed) {
-        await api.delete(`/reservations.php?res_id=${reservation.res_id}`);
+        await api.delete(`/reservations.php?id=${reservation.id}`);
 
         const updatedReservations = reservations.filter(
-          (r) => r.res_id !== reservation.res_id
+          (r) => r.id !== reservation.id
         );
 
         setReservations(updatedReservations);
@@ -190,7 +192,7 @@ export default function ReservationList() {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((reservation, index) => (
                 <TableRow
-                  key={reservation.res_id}
+                  key={reservation.id}
                   style={{
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
@@ -207,8 +209,8 @@ export default function ReservationList() {
                       color: reservation.emp_id === 0 ? "#A53860" : "#000000",
                     }}
                   ></TableCell>
-                  <TableCell>{reservation.service_title}</TableCell>
-                  <TableCell>{reservation.contract_term}</TableCell>
+                  <TableCell>{reservation.service_name}</TableCell>
+                  <TableCell>{reservation.term_name}</TableCell>
                   <TableCell>{reservation.date}</TableCell>
                   <TableCell>{reservation.time}</TableCell>
                   <TableCell>
@@ -263,7 +265,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.service_title}
+                value={currentReservation.service_name}
                 disabled
               />
               <TextField
@@ -272,7 +274,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.contract_term}
+                value={currentReservation.term_name}
                 disabled
               />
               <TextField

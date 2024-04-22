@@ -81,6 +81,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
   const [bookedDate, setBookedDate] = useState("");
   const [bookedTime, setBookedTime] = useState("");
   const [bookedTerm, setBookedTerm] = useState("");
+  const [message, setMessage] = useState("");
   const [toastOpen, setToastOpen] = useState(true);
   const [, setErrorMessage] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
@@ -96,7 +97,8 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
         !bookedService ||
         !bookedDate ||
         !bookedTime ||
-        !bookedTerm
+        !bookedTerm ||
+        !message
       ) {
         setErrorMessage("Please fill out all fields.");
         return;
@@ -112,12 +114,13 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
         client_detailedAdd: clientDetailedAdd,
         client_city: clientCity,
         client_province: clientProvince,
-        emp_id: 0,
-        emp_name: "No prefered Employee",
+        emp_id: "",
+        emp_name: "",
         service_title: bookedService,
         date: bookedDate,
         time: bookedTime,
         contract_term: bookedTerm,
+        message: message,
       });
       setToastOpen(true);
       onClose();
@@ -136,6 +139,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
     setBookedDate("");
     setBookedTime("");
     setBookedTerm("");
+    setMessage("");
     onClose();
   };
 
@@ -261,6 +265,18 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
             </MenuItem>
           </Select>
         </SelectInput>
+        <Input
+          value={message}
+          onChange={(e) => setBookedTime(e.target.value)}
+          type="text"
+          label="Message"
+          fullWidth
+          multiline
+          margin="normal"
+          variant="outlined"
+          rows={4}
+          sx={{ marginBottom: 4 }}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleSubmit} color="secondary" variant="contained">
