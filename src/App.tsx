@@ -9,7 +9,7 @@ import Contact from "./pages/Contact";
 import AdminNavBar from "./components/AdminNavBar";
 import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
-import EmployeeDashboard from "./pages/AdminDashboard";
+import EmployeeDashboard from "./pages/EmployeeDashboard";
 import UserNavBar from "./components/UserNavBar";
 import LoginPage from "./pages/LoginPage";
 import SigningPage from "./pages/SigningPage";
@@ -18,7 +18,7 @@ import Blogs from "./pages/Blogs";
 import Services from "./pages/Services";
 import EmployeesPortal from "./pages/EmployeesPortal";
 
-export default function App(employee) {
+export default function App(employee: any) {
   return (
     <Router>
       <Navigation window={undefined} />
@@ -37,7 +37,7 @@ export default function App(employee) {
           element={
             <>
               <AdminNavBar />
-              <AdminDashboard employee={employee} />
+              <AdminDashboard />
             </>
           }
         />
@@ -55,7 +55,7 @@ export default function App(employee) {
           element={
             <>
               <UserNavBar />
-              <EmployeeDashboard employee={employee} />
+              <EmployeeDashboard />
             </>
           }
         />

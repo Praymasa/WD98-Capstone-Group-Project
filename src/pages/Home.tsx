@@ -1,3 +1,6 @@
+import React from "react";
+import { HashLink } from "react-router-hash-link";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -10,11 +13,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
 import FamilyPhone from "../../public/Images/family-phone.webp";
-import React from "react";
 import BookingForm from "../components/BookingForm";
 import WhyUs from "../components/WhyUs";
-import { HashLink } from "react-router-hash-link";
-import { Link } from "react-router-dom";
 import "./Home.css";
 
 export default function Home() {

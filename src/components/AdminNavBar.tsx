@@ -25,6 +25,10 @@ const pages = [
     label: "Employees",
     path: "/employees",
   },
+  {
+    label: "Services",
+    path: "/services",
+  },
 ];
 const settings = [
   {

@@ -1,10 +1,10 @@
 import React from "react";
-import { Box } from "@mui/material";
+import ClientServiceTable from "../components/ClientServiceTable";
 
-export default function ClientDashboard() {
+export default function ClientDashBoard() {
   return (
     <>
-      <Box></Box>
+      <ClientServiceTable service={[]} />
     </>
   );
 }

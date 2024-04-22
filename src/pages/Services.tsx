@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { HashLink } from "react-router-hash-link";
 import {
   Avatar,
   Box,
@@ -8,7 +9,6 @@ import {
   Container,
   Grid,
   Typography,
-  Button,
 } from "@mui/material";
 import Diversity2Icon from "@mui/icons-material/Diversity2";
 import BannerCarousel from "../components/BannerCarousel";
@@ -24,19 +24,22 @@ interface CleaningType {
   title: string;
   description: string;
   image?: string;
+  rate: any;
 }
 interface ChildCareType {
   title: string;
   description: string;
   image?: string;
+  rate: any;
 }
 interface SeniorCareType {
   title: string;
   description: string;
   image?: string;
+  rate: any;
 }
+
 export default function Services() {
-  const [, setOpen] = useState(false);
   const [cleaningTypes, setCleaningTypes] = useState<CleaningType[]>([]);
   const [childCareTypes, setChildCareTypes] = useState<ChildCareType[]>([]);
   const [seniorCareTypes, setSeniorCareTypes] = useState<SeniorCareType[]>([]);
@@ -261,10 +264,15 @@ export default function Services() {
 
             <Box className="grid-box" display="grid" sx={{ gridGap: 20 }}>
               {seniorCareTypes.map((type, index) => (
-                <Typography variant="body1" marginBottom={5} key={index}>
-                  <Diversity2Icon color="secondary" />
-                  &nbsp; <b>{type.title}</b>: {type.description}
-                </Typography>
+                <>
+                  <Typography variant="body1" marginBottom={5} key={index}>
+                    <Diversity2Icon color="secondary" />
+                    &nbsp; <b>{type.title}</b>: {type.description}
+                  </Typography>
+                  <HashLink to={"/FAQs"}>
+                    <small>view rate</small>
+                  </HashLink>
+                </>
               ))}
             </Box>
           </Box>

@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+import { HashLink } from "react-router-hash-link";
 import {
   Avatar,
   Box,
@@ -22,13 +24,13 @@ import BestEmployee from "../components/BestEmployee";
 import "./About.css";
 import EmployeeList from "../components/EmployeeList";
 import { Employee } from "../Employee";
-import React, { useEffect, useState } from "react";
+import { fetchEmployees } from "../servicesApi";
 
-export default function About() {
+export default function About(employee) {
   const [employees, setEmployees] = useState<Employee[]>([]);
 
   useEffect(() => {
-    const fetchEmployees = async () => {
+    const fetchData = async () => {
       try {
         const data = await fetchEmployees();
         setEmployees(data);
@@ -37,8 +39,9 @@ export default function About() {
       }
     };
 
-    fetchEmployees();
+    fetchData();
   }, []);
+
   const handleScrollTop = () => {
     window.scrollTo({
       top: 0,
@@ -106,27 +109,34 @@ export default function About() {
 
               <Grid container spacing={5}>
                 <Grid item xs={12} sm={6}>
-                  <Avatar
-                    variant="square"
-                    src={Cleaning}
-                    sx={{
-                      width: "100%",
-                      height: "50%",
-                      objectFit: "cover",
-                      marginBottom: 2,
-                    }}
-                  />
+                  <HashLink to={"/services#housekeeping"}>
+                    <Avatar
+                      variant="square"
+                      src={Cleaning}
+                      sx={{
+                        width: "100%",
+                        height: "50%",
+                        objectFit: "cover",
+                        marginBottom: 2,
+                      }}
+                    />
+                  </HashLink>
+
                   <Box display={"flex"} justifyContent={"center"} gap={2}>
-                    <Avatar
-                      variant="square"
-                      src={Childcare}
-                      sx={{ width: "48%", height: "50%" }}
-                    />
-                    <Avatar
-                      variant="square"
-                      src={Seniorcare}
-                      sx={{ width: "48%", height: "50%" }}
-                    />
+                    <HashLink to={"/services#childcare"}>
+                      <Avatar
+                        variant="square"
+                        src={Childcare}
+                        sx={{ width: "48%", height: "50%" }}
+                      />
+                    </HashLink>
+                    <HashLink to={"/services#seniorcare"}>
+                      <Avatar
+                        variant="square"
+                        src={Seniorcare}
+                        sx={{ width: "48%", height: "50%" }}
+                      />
+                    </HashLink>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6}>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchEmployees } from "../servicesApi";
+import { api, fetchEmployees } from "../servicesApi";
 import {
   Table,
   TableBody,
@@ -11,6 +11,12 @@ import {
   TablePagination,
   Box,
   Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  DialogContent,
+  TextField,
+  DialogActions,
 } from "@mui/material";
 import { Employee } from "../Employee";
 import "../App.css";
@@ -20,19 +26,67 @@ export default function EmployeesTableList() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [openNewEmployeeDialog, setOpenNewEmployeeDialog] = useState(false);
+  const [newEmployee, setNewEmployee] = useState({
+    emp_name: "",
+    emp_contact_number: "",
+    emp_position: "",
+    emp_age: "",
+    emp_location: "",
+    emp_province: "",
+    emp_email: "",
+  });
 
-  //   useEffect(() => {
-  //     const fetchData = async () => {
-  //       try {
-  //         const data = await fetchEmployees();
-  //         console.log("Fetched data:", data);
-  //         setEmployees(data);
-  //       } catch (error) {
-  //         console.error("Error fetching reservations:", error);
-  //       }
-  //     };
-  //     fetchData();
-  //   }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchEmployees();
+        console.log("Fetched data:", data);
+        setEmployees(data);
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleOpenNewEmployeeDialog = () => {
+    setOpenNewEmployeeDialog(true);
+  };
+
+  const handleCloseNewEmployeeDialog = () => {
+    setOpenNewEmployeeDialog(false);
+  };
+
+  const handleSaveNewEmployee = async () => {
+    try {
+      const response = await api.post("/employees.php", newEmployee);
+
+      if (response.status === 200) {
+        console.log("New employee saved successfully!");
+        handleCloseNewEmployeeDialog();
+        setNewEmployee({
+          emp_name: "",
+          emp_contact_number: "",
+          emp_position: "",
+          emp_age: "",
+          emp_location: "",
+          emp_province: "",
+          emp_email: "",
+        });
+      } else {
+        console.error("Error saving new employee:", response.data.error);
+      }
+    } catch (error) {
+      console.error("Error saving new employee:", error);
+    }
+    console.log("Saving new employee:", newEmployee);
+    handleCloseNewEmployeeDialog();
+  };
+
+  const handleChangeNewEmployee = (prop, value) => {
+    setNewEmployee((prevState) => ({ ...prevState, [prop]: value }));
+  };
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -54,11 +108,20 @@ export default function EmployeesTableList() {
         bottom: 0,
         overflowY: "auto",
         backgroundColor: "#fff0f0",
+        margin: "0 10px",
       }}
     >
       <Typography variant="h4" textAlign="center" paddingY={2}>
         Employee List
       </Typography>
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleOpenNewEmployeeDialog}
+        sx={{ borderRadius: 5, marginBottom: 3 }}
+      >
+        Add New Employee
+      </Button>
       <TableContainer
         component={Paper}
         style={{
@@ -109,6 +172,71 @@ export default function EmployeesTableList() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Dialog
+        open={openNewEmployeeDialog}
+        onClose={handleCloseNewEmployeeDialog}
+      >
+        <DialogTitle>Add New Employee</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Name"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_name}
+            onChange={(e) =>
+              handleChangeNewEmployee("emp_name", e.target.value)
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Position"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_position}
+            onChange={(e) =>
+              handleChangeNewEmployee("emp_position", e.target.value)
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Age"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_age}
+            onChange={(e) => handleChangeNewEmployee("emp_age", e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Contact Number"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_contact_number}
+            onChange={(e) =>
+              handleChangeNewEmployee("emp_contact_number", e.target.value)
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Location"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_location}
+            onChange={(e) =>
+              handleChangeNewEmployee("emp_location", e.target.value)
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseNewEmployeeDialog}>Cancel</Button>
+          <Button onClick={handleSaveNewEmployee}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

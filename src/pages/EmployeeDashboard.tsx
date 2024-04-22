@@ -1,10 +1,12 @@
 import React from "react";
-import { Box } from "@mui/material";
+import EmpAssignedTasks from "../components/EmpAssignedTasks";
+import EmpAcceptedTasks from "../components/EmpAcceptedTask";
 
 export default function EmployeeDashboard() {
   return (
     <>
-      <Box></Box>
+      <EmpAssignedTasks tasks={[]} />
+      <EmpAcceptedTasks tasks={[]} />
     </>
   );
 }

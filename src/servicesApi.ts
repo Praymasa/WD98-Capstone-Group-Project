@@ -35,11 +35,19 @@ export const fetchSeniorCareTypes = async () => {
   const response = await api.get("/seniorcare.php");
   return response.data;
 };
-
-export const signUp = async () => {
-  const response = await api.post("/signup.php");
+export const fetchAssignedTasks = async () => {
+  const response = await api.get("/.php");
   return response.data;
 };
+export const fetchAcceptedTasks = async () => {
+  const response = await api.get("/.php");
+  return response.data;
+};
+export const fetchClientsReservations = async () => {
+  const response = await api.get("/.php");
+  return response.data;
+};
+
 export const fetchFilteredEmployees = async (
   position: string
 ): Promise<Employee[]> => {

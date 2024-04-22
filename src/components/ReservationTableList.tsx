@@ -13,6 +13,10 @@ import {
   Box,
   Typography,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from "@mui/material";
 import "../App.css";
 import React from "react";
@@ -34,29 +38,63 @@ interface Reservation {
 
 export default function ReservationList() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
-  const [editedEmpName, setEditedEmpName] = useState<string | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [currentReservation, setCurrentReservation] =
+    useState<Reservation | null>(null);
+  const [editedEmpId, setEditedEmpId] = useState<number | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const data = await fetchReservations();
-  //       console.log("Fetched data:", data);
-  //       const formattedData = data.map(
-  //         (reservation: { date: string; time: string }) => ({
-  //           ...reservation,
-  //           date: formatDate(reservation.date),
-  //           time: formatTime(reservation.time),
-  //         })
-  //       );
-  //       setReservations(formattedData);
-  //     } catch (error) {
-  //       console.error("Error fetching reservations:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchReservations();
+        console.log("Fetched data:", data);
+
+        const formattedData = data.map(
+          (reservation: { date: string; time: string }) => ({
+            ...reservation,
+            date: formatDate(reservation.date),
+            time: formatTime(reservation.time),
+          })
+        );
+        setReservations(formattedData);
+      } catch (error) {
+        console.error("Error fetching reservations:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const handleOpenEditDialog = (reservation: Reservation) => {
+    setCurrentReservation(reservation);
+    setEditedEmpId(reservation.emp_id);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+    setCurrentReservation(null);
+    setEditedEmpId(null);
+  };
+
+  const handleSaveEditedEmpId = async () => {
+    if (currentReservation && editedEmpId !== null) {
+      const updatedReservation = {
+        ...currentReservation,
+        emp_id: editedEmpId,
+      };
+
+      await api.put(`/reservations.php`, updatedReservation);
+
+      const updatedReservations = reservations.map((r) =>
+        r.res_id === currentReservation.res_id ? updatedReservation : r
+      );
+
+      setReservations(updatedReservations);
+      handleCloseEditDialog();
+    }
+  };
 
   const handleDeleteReservation = async (reservation: Reservation) => {
     try {
@@ -75,41 +113,6 @@ export default function ReservationList() {
     } catch (error) {
       console.error("Error deleting reservation:", error);
     }
-  };
-
-  const handleEditEmpName = (empName: string) => {
-    setEditedEmpName(empName);
-  };
-
-  const handleSaveEmpName = async (reservation: Reservation) => {
-    try {
-      if (editedEmpName) {
-        const confirmed = window.confirm(
-          "Are you sure you want to save the changes?"
-        );
-        if (confirmed) {
-          const updatedReservation = {
-            ...reservation,
-            emp_name: editedEmpName,
-          };
-
-          await api.put(`/reservations.php`, updatedReservation);
-
-          const updatedReservations = reservations.map((r) =>
-            r.res_id === updatedReservation.res_id ? updatedReservation : r
-          );
-
-          setReservations(updatedReservations);
-          setEditedEmpName(null);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating employee name:", error);
-    }
-  };
-
-  const handleCancelEmpNameEdit = () => {
-    setEditedEmpName(null);
   };
 
   const formatDate = (dateString: string) => {
@@ -203,60 +206,28 @@ export default function ReservationList() {
                     style={{
                       color: reservation.emp_id === 0 ? "#A53860" : "#000000",
                     }}
-                  >
-                    {editedEmpName === reservation.emp_name ? (
-                      <TextField
-                        value={editedEmpName}
-                        onChange={(e) => setEditedEmpName(e.target.value)}
-                        onBlur={() => {}}
-                        autoFocus
-                      />
-                    ) : (
-                      reservation.emp_name
-                    )}
-                  </TableCell>
+                  ></TableCell>
                   <TableCell>{reservation.service_title}</TableCell>
                   <TableCell>{reservation.contract_term}</TableCell>
                   <TableCell>{reservation.date}</TableCell>
                   <TableCell>{reservation.time}</TableCell>
                   <TableCell>
-                    {editedEmpName === reservation.emp_name ? (
-                      <>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() => handleSaveEmpName(reservation)}
-                        >
-                          Save
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="secondary"
-                          onClick={handleCancelEmpNameEdit}
-                        >
-                          Cancel
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button
-                          variant="outlined"
-                          color="primary"
-                          onClick={() =>
-                            handleEditEmpName(reservation.emp_name)
-                          }
-                        >
-                          Edit
-                        </Button>
-                        <Button
-                          variant="outlined"
-                          color="secondary"
-                          onClick={() => handleDeleteReservation(reservation)}
-                        >
-                          Delete
-                        </Button>
-                      </>
-                    )}
+                    <>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        onClick={() => handleOpenEditDialog(reservation)}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => handleDeleteReservation(reservation)}
+                      >
+                        Delete
+                      </Button>
+                    </>
                   </TableCell>
                 </TableRow>
               ))}
@@ -272,6 +243,56 @@ export default function ReservationList() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
+        <DialogTitle>Edit Reservation</DialogTitle>
+        <DialogContent>
+          {currentReservation && (
+            <>
+              <TextField
+                margin="dense"
+                label="Client's Name"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={currentReservation.client_name}
+                disabled
+              />
+              <TextField
+                margin="dense"
+                label="Service Title"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={currentReservation.service_title}
+                disabled
+              />
+              <TextField
+                margin="dense"
+                label="Contract Term"
+                type="text"
+                fullWidth
+                variant="outlined"
+                value={currentReservation.contract_term}
+                disabled
+              />
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Employee ID"
+                type="number"
+                fullWidth
+                variant="outlined"
+                value={editedEmpId || ""}
+                onChange={(e) => setEditedEmpId(parseInt(e.target.value))}
+              />
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog}>Cancel</Button>
+          <Button onClick={handleSaveEditedEmpId}>Save</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

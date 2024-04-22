@@ -12,6 +12,8 @@ import AdminDashboard from "./pages/AdminDashboard";
 import ClientDashboard from "./pages/ClientDashboard";
 import EmployeeDashboard from "./pages/EmployeeDashboard";
 import Reservations from "./pages/Reservations";
+import ClientsList from "./components/ClientsTableList";
+import EmployeesTableList from "./components/EmployeesTableList";
 
 const routes = [
   {
@@ -66,7 +68,7 @@ const routes = [
   },
   {
     name: "ClientDashboard",
-    path: "/clientdashbord",
+    path: "/clientdashboard",
     element: <ClientDashboard />,
   },
   {
@@ -87,7 +89,7 @@ const routes = [
   {
     name: "Employees",
     path: "/employees",
-    element: <EmployeesList />,
+    element: <EmployeesTableList />,
   },
 ];
 
