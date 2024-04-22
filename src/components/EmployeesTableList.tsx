@@ -17,6 +17,7 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  MenuItem,
 } from "@mui/material";
 import { Employee } from "../Employee";
 import "../App.css";
@@ -29,6 +30,7 @@ export default function EmployeesTableList() {
   const [openNewEmployeeDialog, setOpenNewEmployeeDialog] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
     emp_name: "",
+    emp_type: "",
     emp_contact_number: "",
     emp_position: "",
     emp_age: "",
@@ -67,6 +69,7 @@ export default function EmployeesTableList() {
         handleCloseNewEmployeeDialog();
         setNewEmployee({
           emp_name: "",
+          emp_type: "",
           emp_contact_number: "",
           emp_position: "",
           emp_age: "",
@@ -134,6 +137,7 @@ export default function EmployeesTableList() {
           <TableHead>
             <TableRow className="table-head">
               <TableCell className="table-row">Name</TableCell>
+              <TableCell className="table-row">Type</TableCell>
               <TableCell className="table-row">Contact Number</TableCell>
               <TableCell className="table-row">Position</TableCell>
               <TableCell className="table-row">Age</TableCell>
@@ -153,6 +157,7 @@ export default function EmployeesTableList() {
                   }}
                 >
                   <TableCell>{employee.emp_name}</TableCell>
+                  <TableCell>{employee.emp_type}</TableCell>
                   <TableCell>{employee.emp_position}</TableCell>
                   <TableCell>{employee.emp_age}</TableCell>
                   <TableCell>{employee.emp_contact_number}</TableCell>
@@ -192,6 +197,21 @@ export default function EmployeesTableList() {
           <TextField
             autoFocus
             margin="dense"
+            label="Employee Type"
+            type="text"
+            fullWidth
+            value={newEmployee.emp_type}
+            onChange={(e) =>
+              handleChangeNewEmployee("emp_type", e.target.value)
+            }
+            select
+          >
+            <MenuItem value="position1">Administrator</MenuItem>
+            <MenuItem value="position2">Service Provider</MenuItem>
+          </TextField>
+          <TextField
+            autoFocus
+            margin="dense"
             label="Position"
             type="text"
             fullWidth
@@ -199,7 +219,12 @@ export default function EmployeesTableList() {
             onChange={(e) =>
               handleChangeNewEmployee("emp_position", e.target.value)
             }
-          />
+            select
+          >
+            <MenuItem value="position1">Housekeeper</MenuItem>
+            <MenuItem value="position2">Nanny/Baby Sitter</MenuItem>
+            <MenuItem value="position3">Care Giver</MenuItem>
+          </TextField>
           <TextField
             autoFocus
             margin="dense"
