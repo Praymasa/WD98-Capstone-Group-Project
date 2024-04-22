@@ -1,0 +1,22 @@
+#contact {
+    background-image: url(../../public/Images/contact-us-bg.webp);
+    min-height: 700px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contact-info {
+    background: #4e4c67;
+    background: linear-gradient(58deg,
+            rgba(78, 76, 103, 1) 20%,
+            rgba(155, 39, 176, 1) 100%);
+    background-size: auto;
+    background-repeat: no-repeat;
+    color: #fff;
+}

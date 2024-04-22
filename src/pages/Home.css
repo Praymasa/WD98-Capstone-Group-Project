@@ -1,0 +1,91 @@
+#welcome-pg {
+    background-image: url("../../public/Images/happy-family-banner.jpg");
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #dccfdf80;
+}
+
+.welcome-pg-img {
+    background-color: #4e4d66;
+    background-image:
+        radial-gradient(at 99% 98%, hsla(334, 93%, 56%, 0.38) 0px, transparent 50%),
+        radial-gradient(at 1% 2%, hsla(334, 93%, 56%, 0.38) 0px, transparent 50%);
+}
+
+#welcome-pg span,
+.color {
+    color: #9C27B0;
+}
+
+.bottom-line {
+    padding: 10px 25px;
+    border-radius: 15px 50px;
+    background: #dccfdfd0;
+}
+
+.btn-links {
+    background-color: #4E4C67 !important;
+    box-shadow: 5px 5px #9595a3 !important;
+}
+
+#hth {
+    background-image: url(../../public/Images/miniature-house-blur-background.avif);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+}
+
+#hth .family-word {
+    color: #9C27B0;
+    font-size: 1.5rem;
+}
+
+#hth span {
+    color: #9C27B0;
+}
+
+#hth .hashlink {
+    color: #9C27B0;
+}
+
+#why {
+    background-image: url(../../public/Images/empty-room-bg.jpg);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.why .color {
+    color: #9C27B0;
+    font-weight: bold;
+}
+
+.why-img {
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+}
+
+#difference {
+    background-image: url(../../public/Images/color-blurred-background.jpg);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#difference .color {
+    color: #9C27B0;
+}

@@ -1,0 +1,48 @@
+b span {
+    color: #9C27B0;
+}
+
+ul li {
+    list-style: none;
+    margin-bottom: 5px;
+}
+
+#about-us {
+    background-image: url(../../public/Images/large-couch-fuzzy-blur.avif);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#mission-vision {
+    background-image: url(../../public/Images/about-us-bg.jpg);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#employee-recom {
+    background-image: url(../../public/Images/family-thumbs-up.avif);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#workforce {
+    background-image: url(../../public/Images/color-blurred-background.jpg);
+    min-height: 500px;
+    width: 100%;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
