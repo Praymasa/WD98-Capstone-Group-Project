@@ -39,18 +39,18 @@ export default function EmployeesTableList() {
     emp_email: "",
   });
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await fetchEmployees();
-        console.log("Fetched data:", data);
-        setEmployees(data);
-      } catch (error) {
-        console.error("Error fetching reservations:", error);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const data = await fetchEmployees();
+  //       console.log("Fetched data:", data);
+  //       setEmployees(data);
+  //     } catch (error) {
+  //       console.error("Error fetching reservations:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   const handleOpenNewEmployeeDialog = () => {
     setOpenNewEmployeeDialog(true);
