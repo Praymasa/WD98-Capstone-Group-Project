@@ -125,6 +125,33 @@ const SubmitButton = styled(Button)`
   }
 `;
 
+const LogoutButton = styled(Button)`
+  margin-top: 20px;
+  width: 100%;
+  padding: 11px 40%;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 240ms ease-in-out;
+  background: #4e4c67;
+  background: linear-gradient(
+    38deg,
+    rgba(78, 76, 103, 1) 20%,
+    rgba(155, 39, 176, 1) 100%
+  );
+
+  &:hover {
+    filter: brightness(1.03);
+  }
+`;
+
+const ProfileLink = styled(Link)`
+  margin-top: 10px;
+`;
+
 const VisuallyHiddenInput = styled("input")({
   marginTop: 5,
   clip: "rect(0 0 0 0)",
@@ -140,6 +167,7 @@ const VisuallyHiddenInput = styled("input")({
 
 export default function SignupForm({}) {
   const { switchToSignin } = useContext(AccountContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientFirstName, setClientFirstName] = useState("");
   const [clientLastName, setClientLastName] = useState("");
   const [clientGender, setClientGender] = useState("");
@@ -185,7 +213,7 @@ export default function SignupForm({}) {
         return;
       }
       //endpoint
-      await api.post("/users", {
+      const response = await api.post("/register", {
         first_name: clientFirstName,
         last_name: clientLastName,
         date_of_birth: clientBirthDate,
@@ -198,10 +226,21 @@ export default function SignupForm({}) {
         id_proof: clientIdImage,
         email: clientEmail,
         password: clientPassword,
+        confirmpassword: clientConfirmPassword,
       });
       setToastOpen(true);
+
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem("token", token);
+        window.location.href = "/";
+
+        setToastOpen(true);
+      } else {
+        setErrorMessage("Registration failed");
+      }
     } catch (error) {
-      console.error("Error submitting reservation:", error);
+      console.error("Error submitting registration:", error);
     }
   };
 
@@ -221,169 +260,184 @@ export default function SignupForm({}) {
     setShowConfirmPassword(!showConfirmPassword);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+    window.location.href = "/loginpage";
+  };
+
   return (
     <>
-      <FormContainer>
-        <Input
-          label="Full Name"
-          type="text"
-          variant="outlined"
-          value={clientFirstName}
-          onChange={(e) => setClientFirstName(e.target.value)}
-        />
-        <Input
-          label="Last Name"
-          type="text"
-          variant="outlined"
-          value={clientLastName}
-          onChange={(e) => setClientLastName(e.target.value)}
-        />
-        <Input label="Date of Birth" type="text" variant="outlined" />
-        <SelectInput variant="outlined">
-          <InputLabel id="status-label">Gender</InputLabel>
-          <Select
-            labelId="status-label"
-            label="Status"
-            value={clientGender}
-            onChange={(e) => setClientGender(e.target.value)}
-          >
-            <MenuItem value="female">Female</MenuItem>
-            <MenuItem value="male">Male</MenuItem>
-          </Select>
-        </SelectInput>
-        <Input
-          label="Date of Birth"
-          type="text"
-          variant="outlined"
-          value={clientBirthDate}
-          onChange={(e) => setClientBirthDate(e.target.value)}
-        />
-        <SelectInput variant="outlined">
-          <InputLabel id="status-label">Status</InputLabel>
-          <Select
-            labelId="status-label"
-            label="Status"
-            value={clientStatus}
-            onChange={(e) => setClientStatus(e.target.value)}
-          >
-            <MenuItem value="single">Single</MenuItem>
-            <MenuItem value="married">Married</MenuItem>
-            <MenuItem value="widow">Widow</MenuItem>
-          </Select>
-        </SelectInput>
-        <Input
-          error={!isValidPhoneNumber}
-          helperText={
-            !isValidPhoneNumber &&
-            "Invalid phone number format (e.g 0912-345-6789)"
-          }
-          value={clientNumber}
-          onChange={(e) => {
-            setClientNumber(e.target.value);
-            setIsValidPhoneNumber(validatePhoneNumber(e.target.value));
-          }}
-          label="Contact Number"
-          type="text"
-          variant="outlined"
-        />
-        <Input
-          label="Detailed Address"
-          type="text"
-          variant="outlined"
-          value={clientDetailedAdd}
-          onChange={(e) => setClientDetailedAdd(e.target.value)}
-        />
-        <Input
-          label="City"
-          type="text"
-          variant="outlined"
-          value={clientCity}
-          onChange={(e) => setClientCity(e.target.value)}
-        />
-        <Input
-          label="Province"
-          type="text"
-          variant="outlined"
-          value={clientProvince}
-          onChange={(e) => setClientProvince(e.target.value)}
-        />
-        <Input
-          label="Email"
-          type="email"
-          variant="outlined"
-          value={clientEmail}
-          onChange={(e) => setClientEmail(e.target.value)}
-        />
-        <Input
-          label="Password"
-          type={showPassword ? "text" : "password"}
-          variant="outlined"
-          value={clientPassword}
-          onChange={(e) => setClientPassword(e.target.value)}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  edge="end"
-                  onClick={togglePasswordVisibility}
-                  onMouseDown={(e) => e.preventDefault()}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Input
-          error={!passwordMatch}
-          helperText={!passwordMatch && "Passwords do not match"}
-          label="Confirm Password"
-          type={showConfirmPassword ? "text" : "password"}
-          variant="outlined"
-          value={clientConfirmPassword}
-          onChange={(e) => {
-            setClientConfirmPassword(e.target.value);
-            setPasswordMatch(e.target.value === clientPassword);
-          }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  edge="end"
-                  onClick={toggleConfirmPasswordVisibility}
-                  onMouseDown={(e) => e.preventDefault()}
-                >
-                  {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          color="secondary"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-          sx={{ marginY: 3 }}
-        >
-          Upload Id Proof
-          <VisuallyHiddenInput
-            type="file"
-            value={clientIdImage}
-            onChange={(e) => setClientIdImage(e.target.value)}
-          />
-        </Button>
-      </FormContainer>
-      <SubmitButton type="submit" onClick={handleSubmit}>
-        Signup
-      </SubmitButton>
-      <Marginer direction="vertical" $margin="1em" />
-      <MutedLink marginBottom={2}>
-        Already have an account?{" "}
-        <BoldLink onClick={switchToSignin}>Sign-in</BoldLink>
-      </MutedLink>
+      {isLoggedIn ? (
+        <>
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          <ProfileLink href="/clientdashboard">View Profile</ProfileLink>
+        </>
+      ) : (
+        <>
+          <FormContainer>
+            <Input
+              label="First Name"
+              type="text"
+              variant="outlined"
+              value={clientFirstName}
+              onChange={(e) => setClientFirstName(e.target.value)}
+            />
+            <Input
+              label="Last Name"
+              type="text"
+              variant="outlined"
+              value={clientLastName}
+              onChange={(e) => setClientLastName(e.target.value)}
+            />
+            <Input label="Date of Birth" type="text" variant="outlined" />
+            <SelectInput variant="outlined">
+              <InputLabel id="status-label">Gender</InputLabel>
+              <Select
+                labelId="status-label"
+                label="Status"
+                value={clientGender}
+                onChange={(e) => setClientGender(e.target.value)}
+              >
+                <MenuItem value="female">Female</MenuItem>
+                <MenuItem value="male">Male</MenuItem>
+              </Select>
+            </SelectInput>
+            <Input
+              label="Date of Birth"
+              type="text"
+              variant="outlined"
+              value={clientBirthDate}
+              onChange={(e) => setClientBirthDate(e.target.value)}
+            />
+            <SelectInput variant="outlined">
+              <InputLabel id="status-label">Status</InputLabel>
+              <Select
+                labelId="status-label"
+                label="Status"
+                value={clientStatus}
+                onChange={(e) => setClientStatus(e.target.value)}
+              >
+                <MenuItem value="single">Single</MenuItem>
+                <MenuItem value="married">Married</MenuItem>
+                <MenuItem value="widow">Widow</MenuItem>
+              </Select>
+            </SelectInput>
+            <Input
+              error={!isValidPhoneNumber}
+              helperText={
+                !isValidPhoneNumber &&
+                "Invalid phone number format (e.g 0912-345-6789)"
+              }
+              value={clientNumber}
+              onChange={(e) => {
+                setClientNumber(e.target.value);
+                setIsValidPhoneNumber(validatePhoneNumber(e.target.value));
+              }}
+              label="Contact Number"
+              type="text"
+              variant="outlined"
+            />
+            <Input
+              label="Detailed Address"
+              type="text"
+              variant="outlined"
+              value={clientDetailedAdd}
+              onChange={(e) => setClientDetailedAdd(e.target.value)}
+            />
+            <Input
+              label="City"
+              type="text"
+              variant="outlined"
+              value={clientCity}
+              onChange={(e) => setClientCity(e.target.value)}
+            />
+            <Input
+              label="Province"
+              type="text"
+              variant="outlined"
+              value={clientProvince}
+              onChange={(e) => setClientProvince(e.target.value)}
+            />
+            <Input
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={clientEmail}
+              onChange={(e) => setClientEmail(e.target.value)}
+            />
+            <Input
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              value={clientPassword}
+              onChange={(e) => setClientPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={togglePasswordVisibility}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Input
+              error={!passwordMatch}
+              helperText={!passwordMatch && "Passwords do not match"}
+              label="Confirm Password"
+              type={showConfirmPassword ? "text" : "password"}
+              variant="outlined"
+              value={clientConfirmPassword}
+              onChange={(e) => {
+                setClientConfirmPassword(e.target.value);
+                setPasswordMatch(e.target.value === clientPassword);
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={toggleConfirmPasswordVisibility}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <Button
+              component="label"
+              role={undefined}
+              variant="contained"
+              color="secondary"
+              tabIndex={-1}
+              startIcon={<CloudUploadIcon />}
+              sx={{ marginY: 3 }}
+            >
+              Upload Id Proof
+              <VisuallyHiddenInput
+                type="file"
+                value={clientIdImage}
+                onChange={(e) => setClientIdImage(e.target.value)}
+              />
+            </Button>
+          </FormContainer>
+          <SubmitButton type="submit" onClick={handleSubmit}>
+            Signup
+          </SubmitButton>
+          <Marginer direction="vertical" $margin="1em" />
+          <MutedLink marginBottom={2}>
+            Already have an account?{" "}
+            <BoldLink onClick={switchToSignin}>Sign-in</BoldLink>
+          </MutedLink>
+        </>
+      )}
     </>
   );
 }

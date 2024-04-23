@@ -12,6 +12,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Marginer } from "./Marginer";
 import { AccountContext } from "./AccountContext";
+import { api } from "../servicesApi";
 
 const FormContainer = styled(Box)`
   margin-top: 50px;
@@ -90,26 +91,20 @@ const SubmitButton = styled(Button)`
 
 export function LoginForm() {
   const { switchToSignup } = useContext(AccountContext);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [clientPassword, setClientPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("YOUR_API_ENDPOINT", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-        }),
+      const response = await api.post("/login", {
+        email: clientEmail,
+        password: clientPassword,
       });
-      const data = await response.json();
 
       if (response.status === 200) {
-        localStorage.setItem("userData", JSON.stringify(data));
+        const token = response.data.token;
+        localStorage.setItem("token", JSON.stringify(token));
         //auth page
         window.location.href = "/clientdashboard";
       } else {
@@ -126,15 +121,15 @@ export function LoginForm() {
         label="Email"
         type="email"
         variant="outlined"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        value={clientEmail}
+        onChange={(e) => setClientEmail(e.target.value)}
       />
       <Input
         label="Password"
         type={showPassword ? "text" : "password"}
         variant="outlined"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        value={clientPassword}
+        onChange={(e) => setClientPassword(e.target.value)}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

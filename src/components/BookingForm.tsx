@@ -100,7 +100,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
         setErrorMessage("Invalid phone number format.");
         return;
       }
-      await api.post("/reservations.php", {
+      await api.post("/bookings", {
         service_id: bookedService,
         term_id: bookedTerm,
         status: bookingStatus,
@@ -111,6 +111,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
       setToastOpen(true);
       onClose();
     } catch (error) {
+      alert("Error submiting reservation.");
       console.error("Error submitting reservation:", error);
     }
   };

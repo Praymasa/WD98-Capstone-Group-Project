@@ -7,6 +7,10 @@ export const api = axios.create({
   baseURL,
 });
 
+export const fetchUsers = async () => {
+  const response = await api.get("/users");
+  return response.data;
+};
 export const fetchEmployees = async () => {
   const response = await api.get("/users?user_role=service_provider");
   return response.data;
