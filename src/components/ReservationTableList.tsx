@@ -17,6 +17,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  MenuItem,
 } from "@mui/material";
 import "../App.css";
 import React from "react";
@@ -43,7 +44,7 @@ export default function ReservationList() {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentReservation, setCurrentReservation] =
     useState<Reservation | null>(null);
-  const [editedEmpId, setEditedEmpId] = useState<number | null>(null);
+  const [editedEmpName, setEditedEmpName] = useState<number | null>(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
@@ -70,21 +71,21 @@ export default function ReservationList() {
 
   const handleOpenEditDialog = (reservation: Reservation) => {
     setCurrentReservation(reservation);
-    setEditedEmpId(reservation.emp_id);
+    setEditedEmpName(reservation.emp_id);
     setEditDialogOpen(true);
   };
 
   const handleCloseEditDialog = () => {
     setEditDialogOpen(false);
     setCurrentReservation(null);
-    setEditedEmpId(null);
+    setEditedEmpName(null);
   };
 
-  const handleSaveEditedEmpId = async () => {
-    if (currentReservation && editedEmpId !== null) {
+  const handleSaveEditedEmpName = async () => {
+    if (currentReservation && editedEmpName !== null) {
       const updatedReservation = {
         ...currentReservation,
-        emp_id: editedEmpId,
+        emp_id: editedEmpName,
       };
 
       await api.put(`/reservations.php`, updatedReservation);
@@ -280,19 +281,22 @@ export default function ReservationList() {
               <TextField
                 autoFocus
                 margin="dense"
-                label="Employee ID"
+                label="Employee Name"
                 type="number"
                 fullWidth
                 variant="outlined"
-                value={editedEmpId || ""}
-                onChange={(e) => setEditedEmpId(parseInt(e.target.value))}
-              />
+                value={editedEmpName || ""}
+                onChange={(e) => setEditedEmpName(parseInt(e.target.value))}
+                select
+              >
+                <MenuItem value="employeeName"></MenuItem>
+              </TextField>
             </>
           )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditDialog}>Cancel</Button>
-          <Button onClick={handleSaveEditedEmpId}>Save</Button>
+          <Button onClick={handleSaveEditedEmpName}>Save</Button>
         </DialogActions>
       </Dialog>
     </Box>

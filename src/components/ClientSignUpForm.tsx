@@ -141,15 +141,16 @@ const VisuallyHiddenInput = styled("input")({
 export default function SignupForm({}) {
   const { switchToSignin } = useContext(AccountContext);
   const [clientFirstName, setClientFirstName] = useState("");
-  const [clientMiddleName, setClientMiddleName] = useState("");
   const [clientLastName, setClientLastName] = useState("");
   const [clientGender, setClientGender] = useState("");
+  const [clientBirthDate, setClientBirthDate] = useState("");
   const [clientStatus, setClientStatus] = useState("");
   const [clientNumber, setClientNumber] = useState("");
-  const [clientEmail, setClientEmail] = useState("");
+  const [clientIdImage, setClientIdImage] = useState("");
   const [clientDetailedAdd, setClientDetailedAdd] = useState("");
   const [clientCity, setClientCity] = useState("");
   const [clientProvince, setClientProvince] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
   const [clientPassword, setClientPassword] = useState("");
   const [clientConfirmPassword, setClientConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
@@ -162,15 +163,16 @@ export default function SignupForm({}) {
     try {
       if (
         !clientFirstName ||
-        !clientMiddleName ||
         !clientLastName ||
+        !clientBirthDate ||
         !clientGender ||
         !clientStatus ||
-        !clientNumber ||
-        !clientEmail ||
         !clientDetailedAdd ||
         !clientCity ||
         !clientProvince ||
+        !clientNumber ||
+        !clientIdImage ||
+        !clientEmail ||
         !clientPassword ||
         !clientConfirmPassword
       ) {
@@ -183,18 +185,19 @@ export default function SignupForm({}) {
         return;
       }
       //endpoint
-      await api.post("/clients.php", {
-        client_name: clientFirstName,
-        client_middle: clientMiddleName,
-        client_last: clientLastName,
-        client_status: clientStatus,
-        client_gender: clientGender,
+      await api.post("/users", {
+        first_name: clientFirstName,
+        last_name: clientLastName,
+        date_of_birth: clientBirthDate,
+        deatiled_address: clientDetailedAdd,
+        city_municipality: clientCity,
+        province: clientProvince,
         client_number: clientNumber,
-        client_email: clientEmail,
-        client_password: clientPassword,
-        client_detailedAdd: clientDetailedAdd,
-        client_city: clientCity,
-        client_province: clientProvince,
+        gender: clientGender,
+        matiral_status: clientStatus,
+        id_proof: clientIdImage,
+        email: clientEmail,
+        password: clientPassword,
       });
       setToastOpen(true);
     } catch (error) {
@@ -229,13 +232,6 @@ export default function SignupForm({}) {
           onChange={(e) => setClientFirstName(e.target.value)}
         />
         <Input
-          label="Middle Name"
-          type="text"
-          variant="outlined"
-          value={clientMiddleName}
-          onChange={(e) => setClientMiddleName(e.target.value)}
-        />
-        <Input
           label="Last Name"
           type="text"
           variant="outlined"
@@ -253,9 +249,15 @@ export default function SignupForm({}) {
           >
             <MenuItem value="female">Female</MenuItem>
             <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="non-binary">Non-binary</MenuItem>
           </Select>
         </SelectInput>
+        <Input
+          label="Date of Birth"
+          type="text"
+          variant="outlined"
+          value={clientBirthDate}
+          onChange={(e) => setClientBirthDate(e.target.value)}
+        />
         <SelectInput variant="outlined">
           <InputLabel id="status-label">Status</InputLabel>
           <Select
@@ -367,7 +369,11 @@ export default function SignupForm({}) {
           sx={{ marginY: 3 }}
         >
           Upload Id Proof
-          <VisuallyHiddenInput type="file" />
+          <VisuallyHiddenInput
+            type="file"
+            value={clientIdImage}
+            onChange={(e) => setClientIdImage(e.target.value)}
+          />
         </Button>
       </FormContainer>
       <SubmitButton type="submit" onClick={handleSubmit}>

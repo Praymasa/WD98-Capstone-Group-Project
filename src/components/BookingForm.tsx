@@ -101,7 +101,6 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
         return;
       }
       await api.post("/reservations.php", {
-        emp_id: "",
         service_id: bookedService,
         term_id: bookedTerm,
         status: bookingStatus,

@@ -1,42 +1,42 @@
 import axios from "axios";
 import { Employee } from "./Employee";
 
-const baseURL = "http://localhost/pdo";
+const baseURL = "http://localhost:8000/api";
 
 export const api = axios.create({
   baseURL,
 });
 
 export const fetchEmployees = async () => {
-  const response = await api.get("/employees.php");
+  const response = await api.get("/users?user_role=employee");
   return response.data;
 };
 export const fetchClients = async () => {
-  const response = await api.get("/clients.php");
+  const response = await api.get("/users?user_role=customer");
   return response.data;
 };
 export const fetchReservations = async () => {
-  const response = await api.get("/reservations.php");
+  const response = await api.get("/bookings");
   return response.data;
 };
 export const fetchServices = async () => {
-  const response = await api.get("/services.php");
+  const response = await api.get("/services");
   return response.data;
 };
 export const fetchCleaningTypes = async () => {
-  const response = await api.get("/cleaning.php");
+  const response = await api.get("/services?service_category=cleaning");
   return response.data;
 };
 export const fetchChildCareTypes = async () => {
-  const response = await api.get("/childcare.php");
+  const response = await api.get("/services?service_categoty=childcare");
   return response.data;
 };
 export const fetchSeniorCareTypes = async () => {
-  const response = await api.get("/seniorcare.php");
+  const response = await api.get("/services?service_category=seniorcare");
   return response.data;
 };
 export const fetchAssignedTasks = async () => {
-  const response = await api.get("/.php");
+  const response = await api.get("/");
   return response.data;
 };
 export const fetchAcceptedTasks = async () => {
@@ -51,7 +51,7 @@ export const fetchClientsReservations = async () => {
 export const fetchFilteredEmployees = async (
   position: string
 ): Promise<Employee[]> => {
-  const response = await api.get("/employees.php", {
+  const response = await api.get("/users?user_role=employee", {
     params: {
       position: position,
     },
