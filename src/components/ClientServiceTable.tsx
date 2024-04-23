@@ -20,7 +20,9 @@ import { fetchClientsReservations } from "../servicesApi";
 interface ClientServiceTableProps {
   res_id: string;
   service_id: number;
-  contract_id: number;
+  service_name: string;
+  term_id: number;
+  title: string;
   date: string;
   time: string;
   status: string;
@@ -82,8 +84,8 @@ export default function ClientServiceTable({
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow className="table-head">
-                <TableCell className="table-row">Service_id</TableCell>
-                <TableCell className="table-row">Contract_id</TableCell>
+                <TableCell className="table-row">Service Name</TableCell>
+                <TableCell className="table-row">Contract Term</TableCell>
                 <TableCell className="table-row">Date</TableCell>
                 <TableCell className="table-row">Time</TableCell>
                 <TableCell className="table-row">Status</TableCell>
@@ -96,7 +98,7 @@ export default function ClientServiceTable({
                 .map((service) => (
                   <TableRow key={service.res_id}>
                     <TableCell>{service.service_id}</TableCell>
-                    <TableCell>{service.contract_id}</TableCell>
+                    <TableCell>{service.term_id}</TableCell>
                     <TableCell>{service.date}</TableCell>
                     <TableCell>{service.time}</TableCell>
                     <TableCell>

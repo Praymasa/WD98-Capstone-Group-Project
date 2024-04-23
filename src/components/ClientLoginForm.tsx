@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   Box,
@@ -90,7 +91,9 @@ const SubmitButton = styled(Button)`
 `;
 
 export function LoginForm() {
+  const navigate = useNavigate();
   const { switchToSignup } = useContext(AccountContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientEmail, setClientEmail] = useState("");
   const [clientPassword, setClientPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -105,8 +108,11 @@ export function LoginForm() {
       if (response.status === 200) {
         const token = response.data.token;
         localStorage.setItem("token", JSON.stringify(token));
+        setIsLoggedIn(true);
         //auth page
-        window.location.href = "/clientdashboard";
+        const accountUrl = `/users/${token}`;
+
+        navigate(accountUrl);
       } else {
         setErrorMessage("Invalid email or password");
       }

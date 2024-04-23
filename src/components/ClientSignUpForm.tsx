@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   Box,
@@ -166,6 +167,8 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function SignupForm({}) {
+  const navigate = useNavigate();
+  const { token } = useParams();
   const { switchToSignin } = useContext(AccountContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientFirstName, setClientFirstName] = useState("");
@@ -205,7 +208,7 @@ export default function SignupForm({}) {
         !clientConfirmPassword
       ) {
         setErrorMessage("Please fill out all fields.");
-        return;
+        alert(setErrorMessage);
       }
 
       if (clientPassword !== clientConfirmPassword) {
@@ -233,8 +236,11 @@ export default function SignupForm({}) {
       if (response.status === 200) {
         const token = response.data.token;
         localStorage.setItem("token", token);
-        window.location.href = "/";
+        setIsLoggedIn(true);
 
+        const accountUrl = `/users/${token}`;
+
+        navigate(accountUrl);
         setToastOpen(true);
       } else {
         setErrorMessage("Registration failed");
@@ -271,7 +277,7 @@ export default function SignupForm({}) {
       {isLoggedIn ? (
         <>
           <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-          <ProfileLink href="/clientdashboard">View Profile</ProfileLink>
+          <ProfileLink href={`/users${token}`}>View Profile</ProfileLink>
         </>
       ) : (
         <>
@@ -290,7 +296,6 @@ export default function SignupForm({}) {
               value={clientLastName}
               onChange={(e) => setClientLastName(e.target.value)}
             />
-            <Input label="Date of Birth" type="text" variant="outlined" />
             <SelectInput variant="outlined">
               <InputLabel id="status-label">Gender</InputLabel>
               <Select
