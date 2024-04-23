@@ -197,7 +197,7 @@ export default function EmployeesTableList() {
           <TextField
             autoFocus
             margin="dense"
-            label="Employee Type"
+            label="User Role"
             type="text"
             fullWidth
             value={newEmployee.emp_type}
@@ -206,8 +206,9 @@ export default function EmployeesTableList() {
             }
             select
           >
-            <MenuItem value="position1">Administrator</MenuItem>
-            <MenuItem value="position2">Service Provider</MenuItem>
+            <MenuItem>Administrator</MenuItem>
+            <MenuItem>Service Provider</MenuItem>
+            <MenuItem>Customer</MenuItem>
           </TextField>
           <TextField
             autoFocus

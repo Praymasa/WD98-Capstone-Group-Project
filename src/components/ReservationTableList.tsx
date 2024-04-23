@@ -25,7 +25,6 @@ import React from "react";
 interface Reservation {
   id: string;
   emp_id: number;
-  emp_name: string;
   client_name: string;
   client_number: string;
   client_detailedAdd: string;
@@ -35,8 +34,8 @@ interface Reservation {
   service_name: string;
   term_id: string;
   term_name: string;
-  date: string;
-  time: string;
+  start_date: string;
+  start_time: string;
 }
 
 export default function ReservationList() {
@@ -88,7 +87,7 @@ export default function ReservationList() {
         emp_id: editedEmpName,
       };
 
-      await api.put(`/reservations.php`, updatedReservation);
+      await api.put(`/bookings`, updatedReservation);
 
       const updatedReservations = reservations.map((r) =>
         r.id === currentReservation.id ? updatedReservation : r
@@ -105,7 +104,7 @@ export default function ReservationList() {
         "Are you sure you want to delete this reservation?"
       );
       if (confirmed) {
-        await api.delete(`/reservations.php?id=${reservation.id}`);
+        await api.delete(`/bookings?id=${reservation.id}`);
 
         const updatedReservations = reservations.filter(
           (r) => r.id !== reservation.id
@@ -212,8 +211,8 @@ export default function ReservationList() {
                   ></TableCell>
                   <TableCell>{reservation.service_name}</TableCell>
                   <TableCell>{reservation.term_name}</TableCell>
-                  <TableCell>{reservation.date}</TableCell>
-                  <TableCell>{reservation.time}</TableCell>
+                  <TableCell>{reservation.start_date}</TableCell>
+                  <TableCell>{reservation.start_time}</TableCell>
                   <TableCell>
                     <>
                       <Button

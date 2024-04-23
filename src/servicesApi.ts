@@ -8,7 +8,7 @@ export const api = axios.create({
 });
 
 export const fetchEmployees = async () => {
-  const response = await api.get("/users?user_role=employee");
+  const response = await api.get("/users?user_role=service_provider");
   return response.data;
 };
 export const fetchClients = async () => {
@@ -21,6 +21,10 @@ export const fetchReservations = async () => {
 };
 export const fetchServices = async () => {
   const response = await api.get("/services");
+  return response.data;
+};
+export const fetchTerms = async () => {
+  const response = await api.get("/terms");
   return response.data;
 };
 export const fetchCleaningTypes = async () => {
