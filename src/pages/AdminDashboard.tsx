@@ -1,9 +1,10 @@
 import React from "react";
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import ReservationTableList from "../components/ReservationTableList";
 import ClientsTableList from "../components/ClientsTableList";
 import EmployeeTableList from "../components/EmployeesTableList";
 import ServicesList from "../components/ServicesList";
+import TermsList from "../components/TermsList";
 
 export default function AdminDashboard() {
   return (
@@ -17,8 +18,15 @@ export default function AdminDashboard() {
       <Box>
         <EmployeeTableList />
       </Box>
-      <Box>
-        <ServicesList />
+      <Box sx={{ backgroundColor: "#fff0f0" }}>
+        <Grid container>
+          <Grid item xs={12} md={8}>
+            <ServicesList />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <TermsList />
+          </Grid>
+        </Grid>
       </Box>
     </>
   );

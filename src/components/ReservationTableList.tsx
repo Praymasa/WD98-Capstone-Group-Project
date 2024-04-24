@@ -158,8 +158,8 @@ export default function ReservationList() {
         top: 70,
         bottom: 0,
         overflowY: "auto",
-
         backgroundColor: "#fff0f0",
+        margin: "0 10px",
       }}
     >
       <Typography variant="h4" textAlign="center" paddingY={2}>

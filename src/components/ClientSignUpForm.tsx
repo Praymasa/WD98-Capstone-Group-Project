@@ -238,7 +238,7 @@ export default function SignupForm({}) {
         localStorage.setItem("token", token);
         setIsLoggedIn(true);
 
-        const accountUrl = `/users/${token}`;
+        const accountUrl = `/clientsdashboard/${token}`;
 
         navigate(accountUrl);
         setToastOpen(true);
@@ -250,25 +250,10 @@ export default function SignupForm({}) {
     }
   };
 
-  const handleFileUpload = async (e, imageFile) => {
+  const handleFileUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
       setClientIdImage(file.name);
-      try {
-        const formData = new FormData();
-        formData.append("image", imageFile);
-
-        const response = await api.post(baseImageURL, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        return response.data;
-      } catch (error) {
-        console.error("Image upload failed:", error);
-        throw error;
-      }
     }
   };
   const validatePhoneNumber = (phoneNumber: string) => {

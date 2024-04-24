@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import "../App.css";
 import React from "react";
+import { Margin } from "@mui/icons-material";
 
 interface Client {
   id: number;
@@ -68,6 +69,7 @@ export default function ClientsList() {
         bottom: 0,
         overflowY: "auto",
         backgroundColor: "#fff0f0",
+        margin: "0 10px",
       }}
     >
       <Typography variant="h4" textAlign="center" paddingY={2}>
@@ -86,9 +88,9 @@ export default function ClientsList() {
             <TableRow className="table-head">
               <TableCell className="table-row">Name</TableCell>
               <TableCell className="table-row">Contact Number</TableCell>
+              <TableCell className="table-row">Email</TableCell>
               <TableCell className="table-row">Detailed Address</TableCell>
               <TableCell className="table-row">Province</TableCell>
-              <TableCell className="table-row">Email</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -105,12 +107,12 @@ export default function ClientsList() {
                     {client.first_name} {client.middle_name} {client.last_name}
                   </TableCell>
                   <TableCell>{client.contact_number}</TableCell>
+                  <TableCell>{client.email}</TableCell>
                   <TableCell>
                     {client.detailed_address},&nbsp;
                     {client.city}
                   </TableCell>
                   <TableCell>{client.province}</TableCell>
-                  <TableCell>{client.email}</TableCell>
                 </TableRow>
               ))}
           </TableBody>
