@@ -6,6 +6,7 @@ import {
   Button,
   Container,
   Grid,
+  IconButton,
   Typography,
   Zoom,
   useScrollTrigger,
@@ -109,34 +110,67 @@ export default function About(employee) {
 
               <Grid container spacing={5}>
                 <Grid item xs={12} sm={6}>
-                  <HashLink to={"/services#housekeeping"}>
+                  <Box
+                    className="container"
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: 2,
+                    }}
+                  >
+                    <Box className="overlay">
+                      <HashLink
+                        to={"/services#housekeeping"}
+                        className="overlayButton"
+                      >
+                        Cleaning Service
+                      </HashLink>
+                    </Box>
                     <Avatar
                       variant="square"
+                      className="avatar"
                       src={Cleaning}
                       sx={{
                         width: "100%",
-                        height: "50%",
+                        height: "40%",
                         objectFit: "cover",
-                        marginBottom: 2,
                       }}
                     />
-                  </HashLink>
+                  </Box>
 
                   <Box display={"flex"} justifyContent={"center"} gap={2}>
-                    <HashLink to={"/services#childcare"}>
+                    <Box className="container">
+                      <Box className="overlay">
+                        <HashLink
+                          to={"/services#childcare"}
+                          className="overlayButton"
+                        >
+                          Child Care
+                        </HashLink>
+                      </Box>
                       <Avatar
                         variant="square"
+                        className="avatar"
                         src={Childcare}
-                        sx={{ width: "48%", height: "50%" }}
+                        sx={{ width: "100%", height: "100%" }}
                       />
-                    </HashLink>
-                    <HashLink to={"/services#seniorcare"}>
+                    </Box>
+                    <Box className="container">
+                      <Box className="overlay">
+                        <HashLink
+                          to={"/services#seniorcare"}
+                          className="overlayButton"
+                        >
+                          Senior Care
+                        </HashLink>
+                      </Box>
                       <Avatar
                         variant="square"
+                        className="avatar"
                         src={Seniorcare}
-                        sx={{ width: "48%", height: "50%" }}
+                        sx={{ width: "100%", height: "100%" }}
                       />
-                    </HashLink>
+                    </Box>
                   </Box>
                 </Grid>
                 <Grid item xs={12} sm={6}>

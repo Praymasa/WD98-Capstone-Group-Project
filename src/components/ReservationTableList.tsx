@@ -24,21 +24,18 @@ import React from "react";
 
 interface Reservation {
   id: string;
-  emp_id: number;
-  client_name: string;
-  client_number: string;
-  client_detailedAdd: string;
-  client_city: string;
-  client_province: string;
+  customer: any;
+  employee: any;
   service_id: string;
-  service_name: string;
+  service_title: string;
   term_id: string;
-  term_name: string;
+  term_title: string;
   start_date: string;
   start_time: string;
 }
 
 export default function ReservationList() {
+  const [customer, setCustomer] = useState(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentReservation, setCurrentReservation] =
@@ -70,7 +67,7 @@ export default function ReservationList() {
 
   const handleOpenEditDialog = (reservation: Reservation) => {
     setCurrentReservation(reservation);
-    setEditedEmpName(reservation.emp_id);
+    setEditedEmpName(reservation.employee.fullname);
     setEditDialogOpen(true);
   };
 
@@ -197,20 +194,52 @@ export default function ReservationList() {
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
                 >
-                  <TableCell>{reservation.client_name}</TableCell>
-                  <TableCell>
-                    <p>Contact #: {reservation.client_number}</p>
-                    {reservation.client_detailedAdd},&nbsp;
-                    {reservation.client_city}
-                  </TableCell>
-                  <TableCell>{reservation.client_province}</TableCell>
-                  <TableCell
-                    style={{
-                      color: reservation.emp_id === 0 ? "#A53860" : "#000000",
-                    }}
-                  ></TableCell>
-                  <TableCell>{reservation.service_name}</TableCell>
-                  <TableCell>{reservation.term_name}</TableCell>
+                  {reservation.customer && (
+                    <>
+                      {Object.keys(reservation.customer.fullname).map((key) => (
+                        <TableCell key={key}>
+                          {reservation.customer.fullname[key]}
+                        </TableCell>
+                      ))}
+                    </>
+                  )}
+                  {reservation.customer && (
+                    <>
+                      {Object.keys(reservation.customer.contact_number).map(
+                        (key) => (
+                          <TableCell key={key}>
+                            <p>
+                              <b>Contact No:</b>{" "}
+                              {reservation.customer.contact_number[key]}
+                            </p>
+                            <br />
+                            {reservation.customer.detailed_address[key]}
+                            {reservation.customer.city_municipality[key]}
+                          </TableCell>
+                        )
+                      )}
+                    </>
+                  )}
+                  {reservation.customer && (
+                    <>
+                      {Object.keys(reservation.customer.provice).map((key) => (
+                        <TableCell key={key}>
+                          {reservation.customer.province[key]}
+                        </TableCell>
+                      ))}
+                    </>
+                  )}
+                  {reservation.customer && (
+                    <>
+                      {Object.keys(reservation.employee.fullname).map((key) => (
+                        <TableCell key={key}>
+                          {reservation.employee.fullname[key]}
+                        </TableCell>
+                      ))}
+                    </>
+                  )}
+                  <TableCell>{reservation.service_title}</TableCell>
+                  <TableCell>{reservation.term_title}</TableCell>
                   <TableCell>{reservation.start_date}</TableCell>
                   <TableCell>{reservation.start_time}</TableCell>
                   <TableCell>
@@ -256,7 +285,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.client_name}
+                value={currentReservation.customer.fullname}
                 disabled
               />
               <TextField
@@ -265,7 +294,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.service_name}
+                value={currentReservation.service_title}
                 disabled
               />
               <TextField
@@ -274,7 +303,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.term_name}
+                value={currentReservation.term_title}
                 disabled
               />
               <TextField
