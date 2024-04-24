@@ -196,11 +196,14 @@ export default function ReservationList() {
                 >
                   {reservation.customer && (
                     <>
-                      {Object.keys(reservation.customer.fullname).map((key) => (
-                        <TableCell key={key}>
-                          {reservation.customer.fullname[key]}
-                        </TableCell>
-                      ))}
+                      {Object.keys(reservation.customer.first_name).map(
+                        (key) => (
+                          <TableCell key={key}>
+                            {reservation.customer.fisrt_name[key]}
+                            {reservation.customer.last_name[key]}
+                          </TableCell>
+                        )
+                      )}
                     </>
                   )}
                   {reservation.customer && (
@@ -231,11 +234,13 @@ export default function ReservationList() {
                   )}
                   {reservation.customer && (
                     <>
-                      {Object.keys(reservation.employee.fullname).map((key) => (
-                        <TableCell key={key}>
-                          {reservation.employee.fullname[key]}
-                        </TableCell>
-                      ))}
+                      {Object.keys(reservation.employee.first_name).map(
+                        (key) => (
+                          <TableCell key={key}>
+                            {reservation.employee.first_name[key]}
+                          </TableCell>
+                        )
+                      )}
                     </>
                   )}
                   <TableCell>{reservation.service_title}</TableCell>
@@ -285,7 +290,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.customer.fullname}
+                value={currentReservation.customer.first_name}
                 disabled
               />
               <TextField
