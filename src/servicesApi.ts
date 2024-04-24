@@ -2,10 +2,32 @@ import axios from "axios";
 import { Employee } from "./Employee";
 
 const baseURL = "http://localhost:8000/api";
+const baseImageURL = "http://localhost:8000/images";
 
 export const api = axios.create({
   baseURL,
+  headers: {
+    Accept: "application/json",
+  },
 });
+
+export const uploadImage = async (imageFile) => {
+  try {
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    const response = await api.post(baseImageURL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Image upload failed:", error);
+    throw error;
+  }
+};
 
 export const fetchUsers = async () => {
   const response = await api.get("/users");

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import {
   Box,
@@ -90,8 +90,40 @@ const SubmitButton = styled(Button)`
   }
 `;
 
+const LogoutButton = styled(Button)`
+  margin-top: 20px;
+  width: 100%;
+  padding: 11px 40%;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 240ms ease-in-out;
+  background: #4e4c67;
+  background: linear-gradient(
+    38deg,
+    rgba(78, 76, 103, 1) 20%,
+    rgba(155, 39, 176, 1) 100%
+  );
+
+  &:hover {
+    filter: brightness(1.03);
+  }
+`;
+
+const ProfileLink = styled(Link)`
+  margin-top: 10px;
+  text-decoration: none;
+  color: #9c27b0;
+  font-size: 11px;
+  font-weight: 500;
+`;
+
 export function LoginForm() {
   const navigate = useNavigate();
+  const { token } = useParams();
   const { switchToSignup } = useContext(AccountContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientEmail, setClientEmail] = useState("");
@@ -107,12 +139,13 @@ export function LoginForm() {
 
       if (response.status === 200) {
         const token = response.data.token;
-        localStorage.setItem("token", JSON.stringify(token));
+        localStorage.setItem("token", token);
         setIsLoggedIn(true);
         //auth page
         const accountUrl = `/users/${token}`;
 
         navigate(accountUrl);
+        window.alert("Login successful!");
       } else {
         setErrorMessage("Invalid email or password");
       }
@@ -121,46 +154,63 @@ export function LoginForm() {
     }
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("token");
+    window.location.href = "/loginpage";
+  };
+
   return (
-    <FormContainer>
-      <Input
-        label="Email"
-        type="email"
-        variant="outlined"
-        value={clientEmail}
-        onChange={(e) => setClientEmail(e.target.value)}
-      />
-      <Input
-        label="Password"
-        type={showPassword ? "text" : "password"}
-        variant="outlined"
-        value={clientPassword}
-        onChange={(e) => setClientPassword(e.target.value)}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position="end">
-              <IconButton
-                edge="end"
-                onClick={() => setShowPassword(!showPassword)}
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
-        }}
-      />
-      <MutedLink href="#">Forget your password?</MutedLink>
-      <Marginer direction="vertical" $margin="1.6em" />
-      <SubmitButton type="submit" onClick={handleSubmit}>
-        Signin
-      </SubmitButton>
-      <Marginer direction="vertical" $margin="1em" />
-      <MutedText>
-        Don't have an account?{" "}
-        <BoldLink onClick={switchToSignup}>Sign-up now!</BoldLink>
-      </MutedText>
-    </FormContainer>
+    <>
+      {isLoggedIn ? (
+        <>
+          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
+          <ProfileLink href={`/account/${token}`}>View Profile</ProfileLink>
+        </>
+      ) : (
+        <>
+          <FormContainer>
+            <Input
+              label="Email"
+              type="email"
+              variant="outlined"
+              value={clientEmail}
+              onChange={(e) => setClientEmail(e.target.value)}
+            />
+            <Input
+              label="Password"
+              type={showPassword ? "text" : "password"}
+              variant="outlined"
+              value={clientPassword}
+              onChange={(e) => setClientPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      edge="end"
+                      onClick={() => setShowPassword(!showPassword)}
+                      onMouseDown={(e) => e.preventDefault()}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <MutedLink href="#">Forget your password?</MutedLink>
+            <Marginer direction="vertical" $margin="1.6em" />
+            <SubmitButton type="submit" onClick={handleSubmit}>
+              Signin
+            </SubmitButton>
+            <Marginer direction="vertical" $margin="1em" />
+            <MutedText>
+              Don't have an account?{" "}
+              <BoldLink onClick={switchToSignup}>Sign-up now!</BoldLink>
+            </MutedText>
+          </FormContainer>
+        </>
+      )}
+    </>
   );
 }
 function setErrorMessage(arg0: string) {

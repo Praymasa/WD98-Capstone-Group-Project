@@ -20,6 +20,8 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import Logo from "../../public/Images/YB_Care_logo.png";
 import BookingForm from "./BookingForm";
+import SignupForm from "./ClientSignUpForm";
+import { useState } from "react";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -40,10 +42,11 @@ const NavIconHide = styled(IconButton)(({ theme }) => ({
   },
 }));
 
-export default function Navigation(props: { window: any }) {
+export default function Navigation(props) {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [openBookingModal, setOpenBookingModal] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [openBookingModal, setOpenBookingModal] = useState(false);
+  const { isLoggedIn, handleLogout } = props;
   const isMediumDevice = useMediaQuery("(max-width:900px)");
 
   const handleDrawerToggle = () => {
@@ -149,13 +152,20 @@ export default function Navigation(props: { window: any }) {
             >
               Book Now!
             </Button>
-            <Button component={Link} to="/signingpage" sx={{ color: "#fff" }}>
-              Sign Up
-            </Button>
+            {isLoggedIn ? (
+              <Button onClick={handleLogout} sx={{ color: "#fff" }}>
+                Sign Out
+              </Button>
+            ) : (
+              <Button component={Link} to="/signingpage" sx={{ color: "#fff" }}>
+                Sign Up
+              </Button>
+            )}
             <Button component={Link} to="/loginpage" sx={{ color: "#fff" }}>
               <AccountCircleIcon />
             </Button>
           </Box>
+          <SignupForm isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
         </Toolbar>
       </AppBar>
       <Toolbar />

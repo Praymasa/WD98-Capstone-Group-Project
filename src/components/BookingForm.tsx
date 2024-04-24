@@ -192,7 +192,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
         </SelectInput>
         <Input
           value={message}
-          onChange={(e) => setBookedTime(e.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
           type="text"
           label="Message"
           fullWidth

@@ -177,7 +177,7 @@ export default function SignupForm({}) {
   const [clientBirthDate, setClientBirthDate] = useState("");
   const [clientStatus, setClientStatus] = useState("");
   const [clientNumber, setClientNumber] = useState("");
-  const [clientIdImage, setClientIdImage] = useState("");
+  const [clientIdImage, setClientIdImage] = useState([]);
   const [clientDetailedAdd, setClientDetailedAdd] = useState("");
   const [clientCity, setClientCity] = useState("");
   const [clientProvince, setClientProvince] = useState("");
@@ -220,16 +220,16 @@ export default function SignupForm({}) {
         first_name: clientFirstName,
         last_name: clientLastName,
         date_of_birth: clientBirthDate,
-        deatiled_address: clientDetailedAdd,
+        detailed_address: clientDetailedAdd,
         city_municipality: clientCity,
         province: clientProvince,
-        client_number: clientNumber,
+        contact_number: clientNumber,
         gender: clientGender,
-        matiral_status: clientStatus,
+        marital_status: clientStatus,
         id_proof: clientIdImage,
         email: clientEmail,
         password: clientPassword,
-        confirmpassword: clientConfirmPassword,
+        password_confirmation: clientConfirmPassword,
       });
       setToastOpen(true);
 
@@ -250,6 +250,27 @@ export default function SignupForm({}) {
     }
   };
 
+  const handleFileUpload = async (e, imageFile) => {
+    const file = e.target.files[0];
+    if (file) {
+      setClientIdImage(file.name);
+      try {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        const response = await api.post(baseImageURL, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        return response.data;
+      } catch (error) {
+        console.error("Image upload failed:", error);
+        throw error;
+      }
+    }
+  };
   const validatePhoneNumber = (phoneNumber: string) => {
     const regex = /^\d{4}[-\s]?\d{3}[-\s]?\d{4}$/;
     return regex.test(phoneNumber);
@@ -310,9 +331,12 @@ export default function SignupForm({}) {
             </SelectInput>
             <Input
               label="Date of Birth"
-              type="text"
+              type="date"
               variant="outlined"
               value={clientBirthDate}
+              InputLabelProps={{
+                shrink: true,
+              }}
               onChange={(e) => setClientBirthDate(e.target.value)}
             />
             <SelectInput variant="outlined">
@@ -425,12 +449,8 @@ export default function SignupForm({}) {
               startIcon={<CloudUploadIcon />}
               sx={{ marginY: 3 }}
             >
-              Upload Id Proof
-              <VisuallyHiddenInput
-                type="file"
-                value={clientIdImage}
-                onChange={(e) => setClientIdImage(e.target.value)}
-              />
+              Upload Id Proof: {clientIdImage}
+              <VisuallyHiddenInput type="file" onChange={handleFileUpload} />
             </Button>
           </FormContainer>
           <SubmitButton type="submit" onClick={handleSubmit}>
