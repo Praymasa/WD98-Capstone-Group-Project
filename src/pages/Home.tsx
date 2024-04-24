@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { HashLink } from "react-router-hash-link";
 import { Link } from "react-router-dom";
 import {
@@ -15,10 +15,20 @@ import Diversity2Icon from "@mui/icons-material/Diversity2";
 import FamilyPhone from "../../public/Images/family-phone.webp";
 import BookingForm from "../components/BookingForm";
 import WhyUs from "../components/WhyUs";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import "./Home.css";
 
 export default function Home() {
   const [openBookingModal, setOpenBookingModal] = React.useState(false);
+
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  });
 
   const handleBookingModalOpen = () => {
     setOpenBookingModal(true);
@@ -40,6 +50,7 @@ export default function Home() {
             justifyContent: "center",
             alignItems: "center",
             height: { xs: "auto", md: "95vh" },
+            // backgroundColor: "#dccfdf44",
           }}
         >
           <Grid item xs={12} md={5}>
@@ -49,12 +60,16 @@ export default function Home() {
                 flexDirection: "column",
                 justifyContent: "center",
                 p: 5,
-                backgroundColor: "#dccfdf80",
+                backgroundColor: "#dccfdfa9",
               }}
             >
               <Typography
                 variant="h2"
-                sx={{ p: 2, boxShadow: "-5px -5px #A53860" }}
+                className="balance"
+                sx={{
+                  p: 2,
+                  boxShadow: "-5px -5px #A53860",
+                }}
               >
                 <span>B</span>alanc<span>E</span> <span>S</span>tar
                 <span>T</span>
@@ -66,11 +81,13 @@ export default function Home() {
                 sx={{
                   display: "inline",
                   mb: 5,
+                  pb: 2,
                   boxShadow: "5px 5px #A53860",
                 }}
               >
                 <span>Your</span> Home, Our <span>Care</span>.
               </Typography>
+
               <Button
                 onClick={handleBookingModalOpen}
                 variant="contained"
@@ -84,6 +101,7 @@ export default function Home() {
               >
                 Book a Service Now!
               </Button>
+
               <Grid container spacing={2} sx={{ mt: "auto" }}>
                 <Grid item>
                   <Button
@@ -165,6 +183,8 @@ export default function Home() {
             <Typography
               variant="h4"
               className="bottom-line"
+              data-aos="zoom-in-up"
+              data-aos-offset="100"
               sx={{
                 display: "inline",
                 visibility: { xs: "hidden", md: "visible" },
@@ -211,11 +231,12 @@ export default function Home() {
       <Box
         id="difference"
         sx={{
-          p: 5,
+          py: 10,
           textAlign: "center",
+          maxHeight: 1500,
         }}
       >
-        <Container>
+        <Container data-aos="fade-down">
           <Typography variant="h4" className="bottom-line">
             What Makes <span className="color">U</span>s Different?
           </Typography>
@@ -244,6 +265,9 @@ export default function Home() {
                 variant="square"
                 src={FamilyPhone}
                 alt="Layered Image"
+                data-aos="fade-right"
+                data-aos-offset="300"
+                data-aos-easing="ease-in-sine"
                 sx={{
                   display: "block",
                   width: "auto",
@@ -257,10 +281,14 @@ export default function Home() {
               />
               <Paper
                 elevation={12}
+                data-aos="fade-right"
+                data-aos-delay="300"
+                data-aos-offset="300"
+                data-aos-easing="ease-in-sine"
                 style={{
                   position: "absolute",
-                  top: 15,
-                  left: 15,
+                  top: 25,
+                  left: 25,
                   width: "100%",
                   height: "100%",
                   zIndex: 1,
@@ -325,6 +353,8 @@ export default function Home() {
         <BookingForm
           open={openBookingModal}
           onClose={handleBookingModalClose}
+          services={[]}
+          terms={[]}
         />
       </Box>
     </>

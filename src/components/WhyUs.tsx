@@ -1,8 +1,19 @@
+import React, { useEffect } from "react";
 import { Avatar, Box, Container, Typography } from "@mui/material";
 import HomeCare from "../../public/Images/Loyal-Employment-Home.png";
 import "../pages/Home.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function WhyUs() {
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
+  useEffect(() => {
+    AOS.refresh();
+  });
+
   const whyUsItems = [
     {
       title: "Quality Assurance of Service Providers",
@@ -36,7 +47,8 @@ export default function WhyUs() {
       <Box
         id="why"
         sx={{
-          p: 5,
+          px: 5,
+          py: 8,
           overflow: "auto",
         }}
       >
@@ -91,7 +103,12 @@ export default function WhyUs() {
           sx={{ marginLeft: { xs: "0", md: 3 }, marginTop: { xs: 1, md: 3 } }}
         >
           {whyUsItems.map((item, index) => (
-            <Box key={index}>
+            <Box
+              key={index}
+              data-aos="fade-right"
+              data-aos-offset="300"
+              data-aos-easing="ease-in-sine"
+            >
               <Typography variant="h6" gutterBottom>
                 <b>{item.title}</b>
               </Typography>

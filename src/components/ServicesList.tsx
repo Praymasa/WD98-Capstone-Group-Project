@@ -1,5 +1,6 @@
+import React from "react";
 import { useEffect, useState } from "react";
-import { api, fetchEmployees, fetchServices } from "../servicesApi";
+import { api, fetchServices, fetchTerms } from "../servicesApi";
 import {
   Table,
   TableBody,
@@ -17,22 +18,27 @@ import {
   DialogContent,
   TextField,
   DialogActions,
+  MenuItem,
 } from "@mui/material";
 import "../App.css";
-import React from "react";
+import BookingForm from "./BookingForm";
 
 interface Service {
   service_title: string;
+  category: string;
   description: string;
   rate: string;
 }
 
 export default function ServicesList() {
   const [services, setServices] = useState<Service[]>([]);
+  const [terms, setTerms] = useState([]);
+  const [Category, setCategory] = useState("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openNewServiceDialog, setOpenNewServiceDialog] = useState(false);
   const [newService, setNewService] = useState({
+    category: "",
     service_title: "",
     description: "",
     rate: "",
@@ -46,6 +52,19 @@ export default function ServicesList() {
         setServices(data);
       } catch (error) {
         console.error("Error fetching services:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchTerms();
+        console.log("Fetched data:", data);
+        setTerms(data);
+      } catch (error) {
+        console.error("Error fetching terms:", error);
       }
     };
     fetchData();
@@ -68,6 +87,7 @@ export default function ServicesList() {
         alert("New service saved successfully!");
         handleCloseNewServiceDialog();
         setNewService({
+          category: "",
           service_title: "",
           description: "",
           rate: "",
@@ -134,7 +154,8 @@ export default function ServicesList() {
           <Table stickyHeader aria-label="sticky table">
             <TableHead>
               <TableRow className="table-head">
-                <TableCell className="table-row">Services</TableCell>
+                <TableCell className="table-row">Category</TableCell>
+                <TableCell className="table-row">Service</TableCell>
                 <TableCell className="table-row">Description</TableCell>
                 <TableCell className="table-row">Rate</TableCell>
               </TableRow>
@@ -150,6 +171,7 @@ export default function ServicesList() {
                     }}
                   >
                     <TableCell>{service.service_title}</TableCell>
+                    <TableCell>{service.category}</TableCell>
                     <TableCell>{service.description}</TableCell>
                     <TableCell>{service.rate}</TableCell>
                     <TableCell></TableCell>
@@ -176,7 +198,24 @@ export default function ServicesList() {
             <TextField
               autoFocus
               margin="dense"
-              label="Service Name"
+              label="Employee Name"
+              type="number"
+              fullWidth
+              variant="outlined"
+              value={newService.category}
+              onChange={(e) =>
+                handleChangeNewService("category", e.target.value)
+              }
+              select
+            >
+              {services.map((service, index) => (
+                <MenuItem key={index}>{service.category}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Service Title"
               type="text"
               fullWidth
               value={newService.service_title}

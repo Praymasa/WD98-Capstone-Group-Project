@@ -9,6 +9,43 @@
     background-color: #dccfdf80;
 }
 
+#welcome-pg .balance {
+    animation: wiggle 7s ease normal;
+}
+
+@keyframes wiggle {
+
+    0%,
+    7% {
+        transform: rotateZ(0);
+    }
+
+    15% {
+        transform: rotateZ(-15deg);
+    }
+
+    20% {
+        transform: rotateZ(10deg);
+    }
+
+    25% {
+        transform: rotateZ(-10deg);
+    }
+
+    30% {
+        transform: rotateZ(6deg);
+    }
+
+    35% {
+        transform: rotateZ(-4deg);
+    }
+
+    40%,
+    100% {
+        transform: rotateZ(0);
+    }
+}
+
 .welcome-pg-img {
     background-color: #4e4d66;
     background-image:
@@ -28,8 +65,13 @@
 }
 
 .btn-links {
-    background-color: #4E4C67 !important;
-    box-shadow: 5px 5px #9595a3 !important;
+    background-color: #464468 !important;
+    box-shadow: 5px 5px #767694 !important;
+}
+
+.btn-links:hover {
+    background-color: rgb(68, 65, 102) !important;
+    box-shadow: 1px 1px #9595a3 !important;
 }
 
 #hth {

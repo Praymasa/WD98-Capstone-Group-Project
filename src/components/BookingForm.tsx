@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -12,13 +12,16 @@ import {
   InputLabel,
   FormControl,
   styled,
+  ListSubheader,
 } from "@mui/material";
-import { api } from "../servicesApi";
-
-interface BookingFormProps {
-  open: boolean;
-  onClose: () => void;
-}
+import {
+  api,
+  fetchServices,
+  fetchTerms,
+  fetchCleaningTypes,
+  fetchChildCareTypes,
+  fetchSeniorCareTypes,
+} from "../servicesApi";
 
 const Input = styled(TextField)`
   width: 100%;
@@ -71,16 +74,69 @@ const SelectInput = styled(FormControl)`
   }
 `;
 
+interface BookingFormProps {
+  open: boolean;
+  onClose: () => void;
+  services: any[];
+  terms: any[];
+}
+
+interface Service {
+  id: number;
+  service_title: string;
+  category: string;
+}
+interface Term {
+  id: number;
+  term_title: string;
+}
+
 const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
+  const [services, setServices] = useState<Service[]>([]);
+  const [terms, setTerms] = useState<Term[]>([]);
   const [bookedService, setBookedService] = useState("");
   const [bookedDate, setBookedDate] = useState("");
   const [bookedTime, setBookedTime] = useState("");
   const [bookedTerm, setBookedTerm] = useState("");
   const [bookingStatus, setBookingStatus] = useState("");
   const [message, setMessage] = useState("");
+  const [cleaningServices, setCleaningServices] = useState<Service[]>([]);
+  const [childCareServices, setChildCareServices] = useState<Service[]>([]);
+  const [seniorCareServices, setSeniorCareServices] = useState<Service[]>([]);
   const [toastOpen, setToastOpen] = useState(true);
   const [, setErrorMessage] = useState("");
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
+
+  useEffect(() => {
+    fetchServices();
+  }, []);
+
+  const fetchServices = async () => {
+    const cleaningServices = await fetchCleaningTypes();
+    const childCareServices = await fetchChildCareTypes();
+    const seniorCareServices = await fetchSeniorCareTypes();
+
+    setCleaningServices(cleaningServices);
+    setChildCareServices(childCareServices);
+    setSeniorCareServices(seniorCareServices);
+  };
+
+  const handleServiceChange = (event) => {
+    setBookedService(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await fetchTerms();
+        console.log("Fetched data:", data);
+        setTerms(data);
+      } catch (error) {
+        console.error("Error fetching terms:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleSubmit = async () => {
     try {
@@ -140,17 +196,33 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
           <Select
             label="service-label"
             value={bookedService}
-            onChange={(e) => setBookedService(e.target.value)}
+            onChange={handleServiceChange}
             fullWidth
             required
             variant="outlined"
           >
-            <MenuItem value="Housekeeping">Housekeeping</MenuItem>
-            <MenuItem value="Child Care">Child Care</MenuItem>
-            <MenuItem value="Senior Care">Senior Care</MenuItem>
+            <MenuItem disabled>--- Cleaning Services ---</MenuItem>
+            {cleaningServices.map((service, index) => (
+              <MenuItem key={index} value={service.id}>
+                {service.service_title}
+              </MenuItem>
+            ))}
+            <MenuItem disabled>--- Childcare Services ---</MenuItem>
+            {childCareServices.map((service, index) => (
+              <MenuItem key={index} value={service.id}>
+                {service.service_title}
+              </MenuItem>
+            ))}
+            <MenuItem disabled>--- Seniorcare Services ---</MenuItem>
+            {seniorCareServices.map((service, index) => (
+              <MenuItem key={index} value={service.id}>
+                {service.service_title}
+              </MenuItem>
+            ))}
           </Select>
         </SelectInput>
         <Input
+          label="Date"
           value={bookedDate}
           onChange={(e) => setBookedDate(e.target.value)}
           type="date"
@@ -159,8 +231,12 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
           variant="outlined"
           required
           sx={{ marginBottom: 2 }}
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <Input
+          label="Time"
           value={bookedTime}
           onChange={(e) => setBookedTime(e.target.value)}
           type="time"
@@ -168,6 +244,9 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
           margin="normal"
           variant="outlined"
           required
+          InputLabelProps={{
+            shrink: true,
+          }}
           sx={{ marginBottom: 4 }}
         />
         <SelectInput fullWidth sx={{ marginBottom: 2 }}>
@@ -180,21 +259,18 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
             variant="outlined"
             required
           >
-            <MenuItem value="One Time">One Time</MenuItem>
-            <MenuItem value="Every Other Day">Every Other Day</MenuItem>
-            <MenuItem value="Weekly">Weekly</MenuItem>
-            <MenuItem value="Twice a Month">Twice a Month</MenuItem>
-            <MenuItem value="Monthly">Monthly</MenuItem>
-            <MenuItem value="Long Term Contract">
-              Long Term Contract (minimum of 5 months)
-            </MenuItem>
+            {terms.map((term, index) => (
+              <MenuItem key={index} value={term.id}>
+                {term.term_title}
+              </MenuItem>
+            ))}
           </Select>
         </SelectInput>
         <Input
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           type="text"
-          label="Message"
+          label="Tell us your Needs!"
           fullWidth
           multiline
           margin="normal"
