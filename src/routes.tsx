@@ -63,7 +63,7 @@ const routes = [
   },
   {
     name: "AdminDashboard",
-    path: "/admin",
+    path: "/admindashboard",
     element: <AdminDashboard />,
   },
   {

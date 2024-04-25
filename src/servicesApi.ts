@@ -34,7 +34,7 @@ export const fetchUsers = async () => {
   return response.data;
 };
 export const fetchEmployees = async () => {
-  const response = await api.get("/users?user_role=service_provider");
+  const response = await api.get("/users?user_role=employee");
   return response.data;
 };
 export const fetchClients = async () => {

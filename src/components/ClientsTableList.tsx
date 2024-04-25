@@ -17,14 +17,13 @@ import React from "react";
 import { Margin } from "@mui/icons-material";
 
 interface Client {
+  customer: any;
   id: number;
-  first_name: string;
-  middle_name: string;
-  last_name: string;
-  status: string;
+  fullname: string;
+  marital_status: string;
   gender: string;
   detailed_address: string;
-  city: string;
+  city_municipality: string;
   province: string;
   contact_number: number;
   email: string;
@@ -40,10 +39,10 @@ export default function ClientsList() {
     const fetchData = async () => {
       try {
         const data = await fetchClients();
-        // console.log("Fetched data:", data);
+        console.log("Fetched data:", data);
         setClients(data);
       } catch (error) {
-        console.error("Error fetching reservations:", error);
+        console.error("Error fetching clients:", error);
       }
     };
     fetchData();
@@ -103,14 +102,12 @@ export default function ClientsList() {
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
                 >
-                  <TableCell>
-                    {client.first_name} {client.middle_name} {client.last_name}
-                  </TableCell>
+                  <TableCell>{client.fullname}</TableCell>
                   <TableCell>{client.contact_number}</TableCell>
                   <TableCell>{client.email}</TableCell>
                   <TableCell>
                     {client.detailed_address},&nbsp;
-                    {client.city}
+                    {client.city_municipality}
                   </TableCell>
                   <TableCell>{client.province}</TableCell>
                 </TableRow>

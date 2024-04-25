@@ -21,7 +21,7 @@ import EmployeesPortal from "./pages/EmployeesPortal";
 export default function App(employee: any) {
   return (
     <Router>
-      <Navigation window={undefined} />
+      <Navigation/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -32,33 +32,9 @@ export default function App(employee: any) {
         <Route path="/FAqs" element={<FAQs />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/employeesportal" element={<EmployeesPortal />} />
-        <Route
-          path="/admindashboard"
-          element={
-            <>
-              <AdminNavBar />
-              <AdminDashboard />
-            </>
-          }
-        />
-        <Route
-          path="/clientdashboard"
-          element={
-            <>
-              <UserNavBar />
-              <ClientDashboard />
-            </>
-          }
-        />
-        <Route
-          path="/employeedashboard"
-          element={
-            <>
-              <UserNavBar />
-              <EmployeeDashboard />
-            </>
-          }
-        />
+        <Route path="/admindashboard" element={<AdminDashboard />}/>
+        <Route path="/clientdashboard" element={<ClientDashboard />}/>
+        <Route path="/employeedashboard" element={<EmployeeDashboard />}/>
       </Routes>
       <Footer />
     </Router>

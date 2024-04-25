@@ -66,6 +66,8 @@ export default function Home() {
               <Typography
                 variant="h2"
                 className="balance"
+                data-aos="fade-down"
+                data-aos-easing="ease-in-sine"
                 sx={{
                   p: 2,
                   boxShadow: "-5px -5px #A53860",

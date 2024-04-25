@@ -1,11 +1,15 @@
 export interface Employee {
-  emp_id: number;
-  emp_name: string;
-  emp_type: string;
-  emp_image_path?: string;
-  emp_age: number;
-  emp_location: string;
-  emp_contact_number: string;
-  emp_position: string;
-  emp_bio?: string;
+  id: string;
+  fullname: string;
+  user_role: string;
+  position: string;
+  id_proof?: string;
+  gender?: string;
+  marital_status?: string;
+  detailed_address: string;
+  city_municipality: string;
+  province: string;
+  contact_number: string;
+  email: string;
+  bio?: string;
 }

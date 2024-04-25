@@ -38,8 +38,8 @@ export default function ServicesList() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openNewServiceDialog, setOpenNewServiceDialog] = useState(false);
   const [newService, setNewService] = useState({
-    category: "",
-    service_title: "",
+    service_category: "",
+    title: "",
     description: "",
     rate: "",
   });
@@ -87,8 +87,8 @@ export default function ServicesList() {
         alert("New service saved successfully!");
         handleCloseNewServiceDialog();
         setNewService({
-          category: "",
-          service_title: "",
+          service_category: "",
+          title: "",
           description: "",
           rate: "",
         });
@@ -158,6 +158,7 @@ export default function ServicesList() {
                 <TableCell className="table-row">Service</TableCell>
                 <TableCell className="table-row">Description</TableCell>
                 <TableCell className="table-row">Rate</TableCell>
+                <TableCell className="table-row">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -170,8 +171,8 @@ export default function ServicesList() {
                       backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                     }}
                   >
-                    <TableCell>{service.service_title}</TableCell>
-                    <TableCell>{service.category}</TableCell>
+                    <TableCell>{service.title}</TableCell>
+                    <TableCell>{service.service_category}</TableCell>
                     <TableCell>{service.description}</TableCell>
                     <TableCell>{service.rate}</TableCell>
                     <TableCell></TableCell>
@@ -202,7 +203,7 @@ export default function ServicesList() {
               type="number"
               fullWidth
               variant="outlined"
-              value={newService.category}
+              value={newService.service_category}
               onChange={(e) =>
                 handleChangeNewService("category", e.target.value)
               }
@@ -218,7 +219,7 @@ export default function ServicesList() {
               label="Service Title"
               type="text"
               fullWidth
-              value={newService.service_title}
+              value={newService.title}
               onChange={(e) =>
                 handleChangeNewService("service_title", e.target.value)
               }

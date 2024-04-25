@@ -25,7 +25,12 @@ import React from "react";
 interface Reservation {
   id: string;
   customer: any;
-  employee: any;
+  emp_id: number;
+  client_name: string;
+  client_number: string;
+  client_detailedAdd: string;
+  client_city: string;
+  client_province: string;
   service_id: string;
   service_title: string;
   term_id: string;
@@ -35,7 +40,6 @@ interface Reservation {
 }
 
 export default function ReservationList() {
-  const [customer, setCustomer] = useState(null);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [currentReservation, setCurrentReservation] =
@@ -47,27 +51,24 @@ export default function ReservationList() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchReservations();
-        console.log("Fetched data:", data);
-
-        const formattedData = data.map(
-          (reservation: { date: string; time: string }) => ({
-            ...reservation,
-            date: formatDate(reservation.date),
-            time: formatTime(reservation.time),
-          })
-        );
+        const response = await api.get("/bookings");
+        const formattedData = response.data.map((reservation: Reservation) => ({
+          ...reservation,
+          start_date: formatDate(reservation.start_date),
+          start_time: formatTime(reservation.start_time),
+        }));
         setReservations(formattedData);
       } catch (error) {
         console.error("Error fetching reservations:", error);
       }
     };
+
     fetchData();
   }, []);
 
   const handleOpenEditDialog = (reservation: Reservation) => {
     setCurrentReservation(reservation);
-    setEditedEmpName(reservation.employee.fullname);
+    setEditedEmpName(reservation.emp_id);
     setEditDialogOpen(true);
   };
 
@@ -92,25 +93,6 @@ export default function ReservationList() {
 
       setReservations(updatedReservations);
       handleCloseEditDialog();
-    }
-  };
-
-  const handleDeleteReservation = async (reservation: Reservation) => {
-    try {
-      const confirmed = window.confirm(
-        "Are you sure you want to delete this reservation?"
-      );
-      if (confirmed) {
-        await api.delete(`/bookings?id=${reservation.id}`);
-
-        const updatedReservations = reservations.filter(
-          (r) => r.id !== reservation.id
-        );
-
-        setReservations(updatedReservations);
-      }
-    } catch (error) {
-      console.error("Error deleting reservation:", error);
     }
   };
 
@@ -194,55 +176,18 @@ export default function ReservationList() {
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
                 >
-                  {reservation.customer && (
-                    <>
-                      {Object.keys(reservation.customer.first_name).map(
-                        (key) => (
-                          <TableCell key={key}>
-                            {reservation.customer.fisrt_name[key]}
-                            {reservation.customer.last_name[key]}
-                          </TableCell>
-                        )
-                      )}
-                    </>
-                  )}
-                  {reservation.customer && (
-                    <>
-                      {Object.keys(reservation.customer.contact_number).map(
-                        (key) => (
-                          <TableCell key={key}>
-                            <p>
-                              <b>Contact No:</b>{" "}
-                              {reservation.customer.contact_number[key]}
-                            </p>
-                            <br />
-                            {reservation.customer.detailed_address[key]}
-                            {reservation.customer.city_municipality[key]}
-                          </TableCell>
-                        )
-                      )}
-                    </>
-                  )}
-                  {reservation.customer && (
-                    <>
-                      {Object.keys(reservation.customer.provice).map((key) => (
-                        <TableCell key={key}>
-                          {reservation.customer.province[key]}
-                        </TableCell>
-                      ))}
-                    </>
-                  )}
-                  {reservation.customer && (
-                    <>
-                      {Object.keys(reservation.employee.first_name).map(
-                        (key) => (
-                          <TableCell key={key}>
-                            {reservation.employee.first_name[key]}
-                          </TableCell>
-                        )
-                      )}
-                    </>
-                  )}
+                  <TableCell>{reservation.customer.first_name}</TableCell>
+                  <TableCell>
+                    <p>Contact #: {reservation.customer.contact_number}</p>
+                    {reservation.customer.detailed_address},&nbsp;
+                    {reservation.customer.city_municipality}
+                  </TableCell>
+                  <TableCell>{reservation.customer.province}</TableCell>
+                  <TableCell
+                    style={{
+                      color: reservation.emp_id === 0 ? "#A53860" : "#000000",
+                    }}
+                  ></TableCell>
                   <TableCell>{reservation.service_title}</TableCell>
                   <TableCell>{reservation.term_title}</TableCell>
                   <TableCell>{reservation.start_date}</TableCell>
@@ -255,13 +200,6 @@ export default function ReservationList() {
                         onClick={() => handleOpenEditDialog(reservation)}
                       >
                         Edit
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={() => handleDeleteReservation(reservation)}
-                      >
-                        Delete
                       </Button>
                     </>
                   </TableCell>
@@ -290,7 +228,7 @@ export default function ReservationList() {
                 type="text"
                 fullWidth
                 variant="outlined"
-                value={currentReservation.customer.first_name}
+                value={currentReservation.client_name}
                 disabled
               />
               <TextField

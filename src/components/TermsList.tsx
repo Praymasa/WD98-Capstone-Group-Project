@@ -21,7 +21,7 @@ import { useEffect, useState } from "react";
 import { api, fetchTerms } from "../servicesApi";
 
 interface Terms {
-  term_title: string;
+  title: string;
 }
 
 export default function TermsList() {
@@ -29,8 +29,10 @@ export default function TermsList() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openNewTermDialog, setOpenNewTermDialog] = useState(false);
+  const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null);
+const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newTerm, setNewTerm] = useState({
-    term_title: "",
+    title: "",
   });
 
   useEffect(() => {
@@ -60,9 +62,10 @@ export default function TermsList() {
 
       if (response.status === 200) {
         alert("New term saved successfully!");
+        setTerms([...terms, newTerm]); // Update terms with the new term
         handleCloseNewTermDialog();
         setNewTerm({
-          term_title: "",
+          title: "",
         });
       } else {
         console.error("Error saving new term:", response.data.error);
@@ -72,8 +75,6 @@ export default function TermsList() {
       console.error("Error saving new term:", error);
       alert("Error saving new term");
     }
-    console.log("Saving new term:", newTerm);
-    handleCloseNewTermDialog();
   };
 
   const handleChangeNewTerm = (prop, value) => {
@@ -89,6 +90,37 @@ export default function TermsList() {
   ) => {
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
+  };
+
+const handleEditTerm = (index: number) => {
+  setSelectedTermIndex(index);
+  setOpenEditDialog(true);
+};
+
+const handleCloseEditDialog = () => {
+  setSelectedTermIndex(null);
+  setOpenEditDialog(false);
+};
+
+const handleSaveEditedTerm = async () => {
+  if (selectedTermIndex !== null) {
+    try {
+      // Implement your logic to save the edited term using the selectedTermIndex
+      alert("Edited term saved successfully!");
+      handleCloseEditDialog();
+    } catch (error) {
+      console.error("Error saving edited term:", error);
+      alert("Error saving edited term");
+    }
+  }
+};
+
+  const handleDeleteTerm = (index: number) => {
+    
+    const updatedTerms = [...terms];
+    updatedTerms.splice(index, 1);
+    setTerms(updatedTerms);
+    console.log("Deleted term at index", index);
   };
 
   return (
@@ -127,6 +159,7 @@ export default function TermsList() {
             <TableHead>
               <TableRow className="table-head">
                 <TableCell className="table-row">Terms</TableCell>
+                <TableCell className="table-row">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -139,8 +172,11 @@ export default function TermsList() {
                       backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                     }}
                   >
-                    <TableCell>{term.term_title}</TableCell>
-                    <TableCell></TableCell>
+                    <TableCell>{term.title}</TableCell>
+                    <TableCell>
+                      <Button onClick={() => handleEditTerm(index)}>Edit</Button>
+                      <Button onClick={() => handleDeleteTerm(index)}>Delete</Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -164,9 +200,9 @@ export default function TermsList() {
               label="Term Title"
               type="text"
               fullWidth
-              value={newTerm.term_title}
+              value={newTerm.title}
               onChange={(e) =>
-                handleChangeNewTerm("term_title", e.target.value)
+                handleChangeNewTerm("title", e.target.value)
               }
             />
           </DialogContent>

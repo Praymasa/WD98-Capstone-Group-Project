@@ -11,6 +11,7 @@
 
 #welcome-pg .balance {
     animation: wiggle 7s ease normal;
+    animation-delay: .1s;
 }
 
 @keyframes wiggle {
