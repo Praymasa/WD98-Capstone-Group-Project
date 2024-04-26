@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
 import { Employee } from "./Employee";
 
 const baseURL = "http://localhost:8000/api";
@@ -10,7 +10,6 @@ export const api = axios.create({
     Accept: "application/json",
   },
 });
-
 export const uploadImage = async (imageFile) => {
   try {
     const formData = new FormData();
@@ -34,11 +33,12 @@ export const fetchUsers = async () => {
   return response.data;
 };
 export const fetchEmployees = async () => {
-  const response = await api.get("/users?user_role=employee");
+  const response = await api.get(`/users?user_role=serviceprovider`);
   return response.data;
 };
+
 export const fetchClients = async () => {
-  const response = await api.get("/users?user_role=customer");
+  const response = await api.get(`/users?user_role=${"Customer"}`);
   return response.data;
 };
 export const fetchReservations = async () => {
@@ -70,11 +70,11 @@ export const fetchAssignedTasks = async () => {
   return response.data;
 };
 export const fetchAcceptedTasks = async () => {
-  const response = await api.get("/.php");
+  const response = await api.get("/");
   return response.data;
 };
 export const fetchClientsReservations = async () => {
-  const response = await api.get("/.php");
+  const response = await api.get(`/`);
   return response.data;
 };
 

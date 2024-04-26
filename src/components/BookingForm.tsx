@@ -83,12 +83,12 @@ interface BookingFormProps {
 
 interface Service {
   id: number;
-  service_title: string;
-  category: string;
+  title: string;
+  service_category: string;
 }
 interface Term {
   id: number;
-  term_title: string;
+  title: string;
 }
 
 const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
@@ -204,19 +204,19 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
             <MenuItem disabled>--- Cleaning Services ---</MenuItem>
             {cleaningServices.map((service, index) => (
               <MenuItem key={index} value={service.id}>
-                {service.service_title}
+                {service.title}
               </MenuItem>
             ))}
             <MenuItem disabled>--- Childcare Services ---</MenuItem>
             {childCareServices.map((service, index) => (
               <MenuItem key={index} value={service.id}>
-                {service.service_title}
+                {service.title}
               </MenuItem>
             ))}
             <MenuItem disabled>--- Seniorcare Services ---</MenuItem>
             {seniorCareServices.map((service, index) => (
               <MenuItem key={index} value={service.id}>
-                {service.service_title}
+                {service.title}
               </MenuItem>
             ))}
           </Select>
@@ -261,7 +261,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
           >
             {terms.map((term, index) => (
               <MenuItem key={index} value={term.id}>
-                {term.term_title}
+                {term.title}
               </MenuItem>
             ))}
           </Select>
@@ -270,7 +270,7 @@ const BookingForm: React.FC<BookingFormProps> = ({ open, onClose }) => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           type="text"
-          label="Tell us your Needs!"
+          label="Tell us what you Need!"
           fullWidth
           multiline
           margin="normal"

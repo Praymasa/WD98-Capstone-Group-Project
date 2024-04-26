@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Update the import statement
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,6 +20,9 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 import Logo from "../../public/Images/YB_Care_logo.png";
 import BookingForm from "./BookingForm";
+import useLocalStorage from "../hooks/useLocalStorage";
+import { api } from "../servicesApi";
+import { useState } from "react";
 
 const navItems = [
   { label: "Home", path: "/" },
@@ -42,9 +45,28 @@ const NavIconHide = styled(IconButton)(({ theme }) => ({
 
 export default function Navigation(props: { window: any }) {
   const { window } = props;
+  const { token, removeItem } = useLocalStorage();
+  const [user, setUser] = useState<{
+    fullname: string;
+    id_proof: string | undefined;
+    user_role: string;
+  } | null>(null);
+  const navigate = useNavigate(); // Update the hook here
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [openBookingModal, setOpenBookingModal] = React.useState(false);
   const isMediumDevice = useMediaQuery("(max-width:900px)");
+
+  async function handleLogout() {
+    try {
+      await api.post("/signingpage");
+      removeItem("token");
+      removeItem("user");
+      navigate("/");
+      navigate(0);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -82,12 +104,23 @@ export default function Navigation(props: { window: any }) {
         <ListItemButton onClick={handleBookingModalOpen}>
           Book Now
         </ListItemButton>
-        <ListItemButton component={Link} to="/signingpage">
-          Sign Up
-        </ListItemButton>
-        <ListItemButton component={Link} to="/loginpage">
-          <AccountCircleIcon /> &nbsp;Log In
-        </ListItemButton>
+        {!token ? (
+          <>
+            <ListItemButton component={Link} to="/signingpage">
+              Sign Up
+            </ListItemButton>
+            <ListItemButton component={Link} to="/loginpage">
+              <AccountCircleIcon /> &nbsp;Log In
+            </ListItemButton>
+          </>
+        ) : (
+          <>
+            <ListItemButton onClick={handleLogout}>Sign Out</ListItemButton>
+            <ListItemButton component={Link} to="/employeedashboard">
+              <Avatar src={user?.id_proof} /> &nbsp;Dashboard {user?.fullname}
+            </ListItemButton>
+          </>
+        )}
       </List>
     </Box>
   );
@@ -177,6 +210,8 @@ export default function Navigation(props: { window: any }) {
         <BookingForm
           open={openBookingModal}
           onClose={handleBookingModalClose}
+          services={[]}
+          terms={[]}
         />
       </Box>
     </Box>

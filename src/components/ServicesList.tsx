@@ -24,6 +24,8 @@ import "../App.css";
 import BookingForm from "./BookingForm";
 
 interface Service {
+  title: string;
+  service_category: string;
   service_title: string;
   category: string;
   description: string;
@@ -158,7 +160,6 @@ export default function ServicesList() {
                 <TableCell className="table-row">Service</TableCell>
                 <TableCell className="table-row">Description</TableCell>
                 <TableCell className="table-row">Rate</TableCell>
-                <TableCell className="table-row">Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -175,7 +176,6 @@ export default function ServicesList() {
                     <TableCell>{service.service_category}</TableCell>
                     <TableCell>{service.description}</TableCell>
                     <TableCell>{service.rate}</TableCell>
-                    <TableCell></TableCell>
                   </TableRow>
                 ))}
             </TableBody>
@@ -199,19 +199,21 @@ export default function ServicesList() {
             <TextField
               autoFocus
               margin="dense"
-              label="Employee Name"
+              label="Service Category"
               type="number"
               fullWidth
               variant="outlined"
               value={newService.service_category}
               onChange={(e) =>
-                handleChangeNewService("category", e.target.value)
+                handleChangeNewService("service_category", e.target.value)
               }
               select
             >
-              {services.map((service, index) => (
-                <MenuItem key={index}>{service.category}</MenuItem>
-              ))}
+              <MenuItem value="Cleaning Services">Cleaning Services</MenuItem>
+              <MenuItem value="Child Care Services">
+                Child Care Services
+              </MenuItem>
+              <MenuItem value="Senior Services">Ssenior Services</MenuItem>
             </TextField>
             <TextField
               autoFocus
@@ -220,9 +222,7 @@ export default function ServicesList() {
               type="text"
               fullWidth
               value={newService.title}
-              onChange={(e) =>
-                handleChangeNewService("service_title", e.target.value)
-              }
+              onChange={(e) => handleChangeNewService("title", e.target.value)}
             />
             <TextField
               autoFocus

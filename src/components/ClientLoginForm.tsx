@@ -14,6 +14,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { Marginer } from "./Marginer";
 import { AccountContext } from "./AccountContext";
 import { api } from "../servicesApi";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 const FormContainer = styled(Box)`
   margin-top: 50px;
@@ -124,92 +125,73 @@ const ProfileLink = styled(Link)`
 export function LoginForm() {
   const navigate = useNavigate();
   const { token } = useParams();
+  const { setItem } = useLocalStorage();
   const { switchToSignup } = useContext(AccountContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientEmail, setClientEmail] = useState("");
   const [clientPassword, setClientPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async () => {
+  async function handleSubmit(e) {
+    e.preventDefault();
     try {
-      const response = await api.post("/login", {
+      const body = {
         email: clientEmail,
         password: clientPassword,
-      });
-
-      if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
-        setIsLoggedIn(true);
-        //auth page
-        const accountUrl = `/users/${token}`;
-
-        navigate(accountUrl);
-        window.alert("Login successful!");
-      } else {
-        setErrorMessage("Invalid email or password");
-      }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
+      };
+      const { data } = await api.post("/login", body);
+      setItem("token", data.token);
+      setItem("user", JSON.stringify(data.user));
+      navigate("/clientdashboard");
+      navigate(0);
+    } catch (e) {
+      alert(e.response.data.message);
     }
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    localStorage.removeItem("token");
-    window.location.href = "/loginpage";
-  };
+  }
 
   return (
     <>
-      {isLoggedIn ? (
-        <>
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-          <ProfileLink href={`/account/${token}`}>View Profile</ProfileLink>
-        </>
-      ) : (
-        <>
-          <FormContainer>
-            <Input
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={clientEmail}
-              onChange={(e) => setClientEmail(e.target.value)}
-            />
-            <Input
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              variant="outlined"
-              value={clientPassword}
-              onChange={(e) => setClientPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      edge="end"
-                      onClick={() => setShowPassword(!showPassword)}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <MutedLink href="#">Forget your password?</MutedLink>
-            <Marginer direction="vertical" $margin="1.6em" />
-            <SubmitButton type="submit" onClick={handleSubmit}>
-              Signin
-            </SubmitButton>
-            <Marginer direction="vertical" $margin="1em" />
-            <MutedText>
-              Don't have an account?{" "}
-              <BoldLink onClick={switchToSignup}>Sign-up now!</BoldLink>
-            </MutedText>
-          </FormContainer>
-        </>
-      )}
+      <>
+        <FormContainer>
+          <Input
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={clientEmail}
+            onChange={(e) => setClientEmail(e.target.value)}
+          />
+          <Input
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
+            value={clientPassword}
+            onChange={(e) => setClientPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={() => setShowPassword(!showPassword)}
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <MutedLink href="#">Forget your password?</MutedLink>
+          <Marginer direction="vertical" $margin="1.6em" />
+          <SubmitButton type="submit" onClick={handleSubmit}>
+            Signin
+          </SubmitButton>
+          <Marginer direction="vertical" $margin="1em" />
+          <MutedText>
+            Don't have an account?{" "}
+            <BoldLink onClick={switchToSignup}>Sign-up now!</BoldLink>
+          </MutedText>
+        </FormContainer>
+      </>
     </>
   );
 }

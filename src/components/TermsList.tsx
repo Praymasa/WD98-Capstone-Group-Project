@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import { api, fetchTerms } from "../servicesApi";
 
 interface Terms {
+  id?: any;
   title: string;
 }
 
@@ -29,8 +30,10 @@ export default function TermsList() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [openNewTermDialog, setOpenNewTermDialog] = useState(false);
-  const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(null);
-const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedTermIndex, setSelectedTermIndex] = useState<number | null>(
+    null
+  );
+  const [openEditDialog, setOpenEditDialog] = useState(false);
   const [newTerm, setNewTerm] = useState({
     title: "",
   });
@@ -62,7 +65,7 @@ const [openEditDialog, setOpenEditDialog] = useState(false);
 
       if (response.status === 200) {
         alert("New term saved successfully!");
-        setTerms([...terms, newTerm]); // Update terms with the new term
+        setTerms([...terms, newTerm]);
         handleCloseNewTermDialog();
         setNewTerm({
           title: "",
@@ -81,6 +84,74 @@ const [openEditDialog, setOpenEditDialog] = useState(false);
     setNewTerm((prevState) => ({ ...prevState, [prop]: value }));
   };
 
+  const handleEditTerm = async (index: number) => {
+    try {
+      const confirmed = window.confirm(
+        "Are you sure you want to edit this term?"
+      );
+      if (confirmed) {
+        const termToUpdate = terms[index];
+
+        const newTitle = prompt("Enter the new title for the term:");
+        if (!newTitle) {
+          return;
+        }
+
+        if (newTitle.trim() === "") {
+          alert("Title cannot be empty. Please provide a valid title.");
+          return;
+        }
+        const updatedData = {
+          id: termToUpdate.id,
+          title: newTitle,
+        };
+
+        await api.put(`/terms/${termToUpdate.id}`, updatedData);
+        const updatedTerms = await fetchTerms();
+        setTerms(updatedTerms);
+      }
+    } catch (error) {
+      console.error("Error editing term:", error);
+    }
+    setOpenEditDialog(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setSelectedTermIndex(null);
+    setOpenEditDialog(false);
+  };
+
+  const handleSaveEditedTerm = async () => {
+    if (selectedTermIndex !== null) {
+      try {
+        alert("Edited term saved successfully!");
+        handleCloseEditDialog();
+      } catch (error) {
+        console.error("Error saving edited term:", error);
+        alert("Error saving edited term");
+      }
+    }
+  };
+
+  const handleDeleteTerm = async (index: number) => {
+    try {
+      const confirmed = window.confirm(
+        "Are you sure you want to delete this term?"
+      );
+      if (confirmed) {
+        const termToDelete = terms[index];
+        await api.delete(`/terms/${termToDelete.id}`);
+
+        const updatedTerms = terms.filter(
+          (term) => term.id !== termToDelete.id
+        );
+        setTerms(updatedTerms);
+      }
+    } catch (error) {
+      console.error("Error deleting term:", error);
+    }
+  };
+
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
   };
@@ -90,37 +161,6 @@ const [openEditDialog, setOpenEditDialog] = useState(false);
   ) => {
     setRowsPerPage(parseInt(event.target.value));
     setPage(0);
-  };
-
-const handleEditTerm = (index: number) => {
-  setSelectedTermIndex(index);
-  setOpenEditDialog(true);
-};
-
-const handleCloseEditDialog = () => {
-  setSelectedTermIndex(null);
-  setOpenEditDialog(false);
-};
-
-const handleSaveEditedTerm = async () => {
-  if (selectedTermIndex !== null) {
-    try {
-      // Implement your logic to save the edited term using the selectedTermIndex
-      alert("Edited term saved successfully!");
-      handleCloseEditDialog();
-    } catch (error) {
-      console.error("Error saving edited term:", error);
-      alert("Error saving edited term");
-    }
-  }
-};
-
-  const handleDeleteTerm = (index: number) => {
-    
-    const updatedTerms = [...terms];
-    updatedTerms.splice(index, 1);
-    setTerms(updatedTerms);
-    console.log("Deleted term at index", index);
   };
 
   return (
@@ -174,8 +214,12 @@ const handleSaveEditedTerm = async () => {
                   >
                     <TableCell>{term.title}</TableCell>
                     <TableCell>
-                      <Button onClick={() => handleEditTerm(index)}>Edit</Button>
-                      <Button onClick={() => handleDeleteTerm(index)}>Delete</Button>
+                      <Button onClick={() => handleEditTerm(index)}>
+                        Edit
+                      </Button>
+                      <Button onClick={() => handleDeleteTerm(index)}>
+                        Delete
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -201,9 +245,7 @@ const handleSaveEditedTerm = async () => {
               type="text"
               fullWidth
               value={newTerm.title}
-              onChange={(e) =>
-                handleChangeNewTerm("title", e.target.value)
-              }
+              onChange={(e) => handleChangeNewTerm("title", e.target.value)}
             />
           </DialogContent>
           <DialogActions>

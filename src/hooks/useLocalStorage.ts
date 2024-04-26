@@ -1,19 +1,24 @@
 import { useState } from "react";
 
 const useLocalStorage = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [token, setToken] = useState<string | null>(() =>
+    localStorage.getItem("token")
+  );
+  const [user, setUser] = useState<string | null>(() => {
+    const userString = localStorage.getItem("user");
+    return userString ? JSON.parse(userString) : null;
+  });
 
-  function setItem(key, value) {
+  function setItem(key: string, value: string) {
     localStorage.setItem(key, value);
   }
 
-  function getItem(key) {
+  function getItem(key: string): string | null {
     const value = localStorage.getItem(key);
-    return value;
+    return value !== null ? value : null; // Ensure TypeScript understands null possibility
   }
 
-  function removeItem(key) {
+  function removeItem(key: string) {
     localStorage.removeItem(key);
   }
 

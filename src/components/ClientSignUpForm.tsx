@@ -167,8 +167,6 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 export default function SignupForm({}) {
-  const navigate = useNavigate();
-  const { token } = useParams();
   const { switchToSignin } = useContext(AccountContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [clientFirstName, setClientFirstName] = useState("");
@@ -234,20 +232,11 @@ export default function SignupForm({}) {
       setToastOpen(true);
 
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem("token", token);
         setIsLoggedIn(true);
-
-        const accountUrl = `/clientsdashboard/${token}`;
-
-        navigate(accountUrl);
-        setToastOpen(true);
       } else {
         setErrorMessage("Registration failed");
       }
-    } catch (error) {
-      console.error("Error submitting registration:", error);
-    }
+    } catch (error) {}
   };
 
   const handleFileUpload = async (e) => {
@@ -280,174 +269,167 @@ export default function SignupForm({}) {
 
   return (
     <>
-      {isLoggedIn ? (
-        <>
-          <LogoutButton onClick={handleLogout}>Logout</LogoutButton>
-          <ProfileLink href={`/users${token}`}>View Profile</ProfileLink>
-        </>
-      ) : (
-        <>
-          <FormContainer>
-            <Input
-              label="First Name"
-              type="text"
-              variant="outlined"
-              value={clientFirstName}
-              onChange={(e) => setClientFirstName(e.target.value)}
-            />
-            <Input
-              label="Last Name"
-              type="text"
-              variant="outlined"
-              value={clientLastName}
-              onChange={(e) => setClientLastName(e.target.value)}
-            />
-            <SelectInput variant="outlined">
-              <InputLabel id="status-label">Gender</InputLabel>
-              <Select
-                labelId="status-label"
-                label="Status"
-                value={clientGender}
-                onChange={(e) => setClientGender(e.target.value)}
-              >
-                <MenuItem value="female">Female</MenuItem>
-                <MenuItem value="male">Male</MenuItem>
-              </Select>
-            </SelectInput>
-            <Input
-              label="Date of Birth"
-              type="date"
-              variant="outlined"
-              value={clientBirthDate}
-              InputLabelProps={{
-                shrink: true,
-              }}
-              onChange={(e) => setClientBirthDate(e.target.value)}
-            />
-            <SelectInput variant="outlined">
-              <InputLabel id="status-label">Status</InputLabel>
-              <Select
-                labelId="status-label"
-                label="Status"
-                value={clientStatus}
-                onChange={(e) => setClientStatus(e.target.value)}
-              >
-                <MenuItem value="single">Single</MenuItem>
-                <MenuItem value="married">Married</MenuItem>
-                <MenuItem value="widow">Widow</MenuItem>
-              </Select>
-            </SelectInput>
-            <Input
-              error={!isValidPhoneNumber}
-              helperText={
-                !isValidPhoneNumber &&
-                "Invalid phone number format (e.g 0912-345-6789)"
-              }
-              value={clientNumber}
-              onChange={(e) => {
-                setClientNumber(e.target.value);
-                setIsValidPhoneNumber(validatePhoneNumber(e.target.value));
-              }}
-              label="Contact Number"
-              type="text"
-              variant="outlined"
-            />
-            <Input
-              label="Detailed Address"
-              type="text"
-              variant="outlined"
-              value={clientDetailedAdd}
-              onChange={(e) => setClientDetailedAdd(e.target.value)}
-            />
-            <Input
-              label="City"
-              type="text"
-              variant="outlined"
-              value={clientCity}
-              onChange={(e) => setClientCity(e.target.value)}
-            />
-            <Input
-              label="Province"
-              type="text"
-              variant="outlined"
-              value={clientProvince}
-              onChange={(e) => setClientProvince(e.target.value)}
-            />
-            <Input
-              label="Email"
-              type="email"
-              variant="outlined"
-              value={clientEmail}
-              onChange={(e) => setClientEmail(e.target.value)}
-            />
-            <Input
-              label="Password"
-              type={showPassword ? "text" : "password"}
-              variant="outlined"
-              value={clientPassword}
-              onChange={(e) => setClientPassword(e.target.value)}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      edge="end"
-                      onClick={togglePasswordVisibility}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Input
-              error={!passwordMatch}
-              helperText={!passwordMatch && "Passwords do not match"}
-              label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
-              variant="outlined"
-              value={clientConfirmPassword}
-              onChange={(e) => {
-                setClientConfirmPassword(e.target.value);
-                setPasswordMatch(e.target.value === clientPassword);
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      edge="end"
-                      onClick={toggleConfirmPasswordVisibility}
-                      onMouseDown={(e) => e.preventDefault()}
-                    >
-                      {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <Button
-              component="label"
-              role={undefined}
-              variant="contained"
-              color="secondary"
-              tabIndex={-1}
-              startIcon={<CloudUploadIcon />}
-              sx={{ marginY: 3 }}
+      <>
+        <FormContainer>
+          <Input
+            label="First Name"
+            type="text"
+            variant="outlined"
+            value={clientFirstName}
+            onChange={(e) => setClientFirstName(e.target.value)}
+          />
+          <Input
+            label="Last Name"
+            type="text"
+            variant="outlined"
+            value={clientLastName}
+            onChange={(e) => setClientLastName(e.target.value)}
+          />
+          <SelectInput variant="outlined">
+            <InputLabel id="status-label">Gender</InputLabel>
+            <Select
+              labelId="status-label"
+              label="Status"
+              value={clientGender}
+              onChange={(e) => setClientGender(e.target.value)}
             >
-              Upload Id Proof: {clientIdImage}
-              <VisuallyHiddenInput type="file" onChange={handleFileUpload} />
-            </Button>
-          </FormContainer>
-          <SubmitButton type="submit" onClick={handleSubmit}>
-            Signup
-          </SubmitButton>
-          <Marginer direction="vertical" $margin="1em" />
-          <MutedLink marginBottom={2}>
-            Already have an account?{" "}
-            <BoldLink onClick={switchToSignin}>Sign-in</BoldLink>
-          </MutedLink>
-        </>
-      )}
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="male">Male</MenuItem>
+            </Select>
+          </SelectInput>
+          <Input
+            label="Date of Birth"
+            type="date"
+            variant="outlined"
+            value={clientBirthDate}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) => setClientBirthDate(e.target.value)}
+          />
+          <SelectInput variant="outlined">
+            <InputLabel id="status-label">Status</InputLabel>
+            <Select
+              labelId="status-label"
+              label="Status"
+              value={clientStatus}
+              onChange={(e) => setClientStatus(e.target.value)}
+            >
+              <MenuItem value="single">Single</MenuItem>
+              <MenuItem value="married">Married</MenuItem>
+              <MenuItem value="widow">Widow</MenuItem>
+            </Select>
+          </SelectInput>
+          <Input
+            error={!isValidPhoneNumber}
+            helperText={
+              !isValidPhoneNumber &&
+              "Invalid phone number format (e.g 0912-345-6789)"
+            }
+            value={clientNumber}
+            onChange={(e) => {
+              setClientNumber(e.target.value);
+              setIsValidPhoneNumber(validatePhoneNumber(e.target.value));
+            }}
+            label="Contact Number"
+            type="text"
+            variant="outlined"
+          />
+          <Input
+            label="Detailed Address"
+            type="text"
+            variant="outlined"
+            value={clientDetailedAdd}
+            onChange={(e) => setClientDetailedAdd(e.target.value)}
+          />
+          <Input
+            label="City"
+            type="text"
+            variant="outlined"
+            value={clientCity}
+            onChange={(e) => setClientCity(e.target.value)}
+          />
+          <Input
+            label="Province"
+            type="text"
+            variant="outlined"
+            value={clientProvince}
+            onChange={(e) => setClientProvince(e.target.value)}
+          />
+          <Input
+            label="Email"
+            type="email"
+            variant="outlined"
+            value={clientEmail}
+            onChange={(e) => setClientEmail(e.target.value)}
+          />
+          <Input
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            variant="outlined"
+            value={clientPassword}
+            onChange={(e) => setClientPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={togglePasswordVisibility}
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Input
+            error={!passwordMatch}
+            helperText={!passwordMatch && "Passwords do not match"}
+            label="Confirm Password"
+            type={showConfirmPassword ? "text" : "password"}
+            variant="outlined"
+            value={clientConfirmPassword}
+            onChange={(e) => {
+              setClientConfirmPassword(e.target.value);
+              setPasswordMatch(e.target.value === clientPassword);
+            }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    edge="end"
+                    onClick={toggleConfirmPasswordVisibility}
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+          <Button
+            component="label"
+            role={undefined}
+            variant="contained"
+            color="secondary"
+            tabIndex={-1}
+            startIcon={<CloudUploadIcon />}
+            sx={{ marginY: 3 }}
+          >
+            Upload Id Proof: {clientIdImage}
+            <VisuallyHiddenInput type="file" onChange={handleFileUpload} />
+          </Button>
+        </FormContainer>
+        <SubmitButton type="submit" onClick={handleSubmit}>
+          Signup
+        </SubmitButton>
+        <Marginer direction="vertical" $margin="1em" />
+        <MutedLink marginBottom={2}>
+          Already have an account?{" "}
+          <BoldLink onClick={switchToSignin}>Sign-in</BoldLink>
+        </MutedLink>
+      </>
     </>
   );
 }

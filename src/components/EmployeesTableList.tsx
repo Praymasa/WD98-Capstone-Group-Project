@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { api, fetchEmployees, fetchUsers } from "../servicesApi";
+import { api, fetchEmployees } from "../servicesApi";
 import {
   Table,
   TableBody,
@@ -30,36 +30,46 @@ export default function EmployeesTableList() {
   const [openNewEmployeeDialog, setOpenNewEmployeeDialog] = useState(false);
   const [openEditEmployeeDialog, setOpenEditEmployeeDialog] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
-    fullname: "",
+    marital_status: "",
+    gender: "",
+    date_of_birth: "",
+    first_name: "",
+    last_name: "",
     user_role: "",
     contact_number: "",
-    position: "",
     age: "",
     detailed_address: "",
     city_municipality: "",
     province: "",
     email: "",
+    password: "",
+    password_confirmation: "",
   });
   const [editedEmployee, setEditedEmployee] = useState({
-    fullname: "",
     user_role: "",
     contact_number: "",
-    position: "",
     detailed_address: "",
     city_municipality: "",
     province: "",
     email: "",
     id: "",
+    password: "",
+    password_confirmation: "",
+    marital_status: "",
+    gender: "",
+    date_of_birth: "",
+    first_name: "",
+    last_name: "",
   });
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await fetchEmployees();
-        console.log("Fetched data:", data);
+        console.log("Employees", data);
         setEmployees(data);
       } catch (error) {
-        console.error("Error fetching reservations:", error);
+        console.error("Error fetching employees:", error);
       }
     };
     fetchData();
@@ -76,21 +86,26 @@ export default function EmployeesTableList() {
 
   const handleSaveNewEmployee = async () => {
     try {
-      const response = await api.post("/users", newEmployee);
+      const response = await api.post("/register", newEmployee);
 
       if (response.status === 200) {
         console.log("New employee saved successfully!");
         handleCloseNewEmployeeDialog();
         setNewEmployee({
-          fullname: "",
+          marital_status: "",
+          gender: "",
+          date_of_birth: "",
+          first_name: "",
+          last_name: "",
           user_role: "",
           contact_number: "",
-          position: "",
           age: "",
           detailed_address: "",
           city_municipality: "",
           province: "",
           email: "",
+          password: "",
+          password_confirmation: "",
         });
       } else {
         console.error("Error saving new employee:", response.data.error);
@@ -113,7 +128,6 @@ export default function EmployeesTableList() {
   };
 
   const handleCloseEditEmployeeDialog = () => {
-    console.log("Closing edit employee dialog");
     setOpenEditEmployeeDialog(false);
   };
 
@@ -140,6 +154,8 @@ export default function EmployeesTableList() {
     } catch (error) {
       console.error("Error updating employee information:", error);
     }
+    console.log("Closing saving employee dialog");
+    setOpenEditEmployeeDialog(false);
   };
 
   // DELETING EMPLOYEE
@@ -211,7 +227,6 @@ export default function EmployeesTableList() {
               <TableCell className="table-row">Name</TableCell>
               <TableCell className="table-row">Type</TableCell>
               <TableCell className="table-row">Contact Number</TableCell>
-              <TableCell className="table-row">Position</TableCell>
               <TableCell className="table-row">Detailed Address</TableCell>
               <TableCell className="table-row">Province</TableCell>
               <TableCell className="table-row">Email</TableCell>
@@ -228,10 +243,11 @@ export default function EmployeesTableList() {
                     backgroundColor: index % 2 === 0 ? "#f5f5f5" : "#ffffff",
                   }}
                 >
-                  <TableCell>{employee.fullname}</TableCell>
+                  <TableCell>
+                    {employee.first_name} {employee.last_name}
+                  </TableCell>
                   <TableCell>{employee.user_role}</TableCell>
                   <TableCell>{employee.contact_number}</TableCell>
-                  <TableCell>{employee.position}</TableCell>
                   <TableCell>
                     {employee.detailed_address} {employee.city_municipality}
                   </TableCell>
@@ -276,16 +292,58 @@ export default function EmployeesTableList() {
         <DialogTitle>Add New Employee</DialogTitle>
         <DialogContent>
           <TextField
-            autoFocus
-            margin="dense"
-            label="Name"
+            label="First Name"
             type="text"
-            fullWidth
-            value={newEmployee.fullname}
+            variant="outlined"
+            value={newEmployee.first_name}
             onChange={(e) =>
-              handleChangeNewEmployee("fullname", e.target.value)
+              handleChangeNewEmployee("first_name", e.target.value)
             }
           />
+          <TextField
+            label="Last Name"
+            type="text"
+            variant="outlined"
+            value={newEmployee.last_name}
+            onChange={(e) =>
+              handleChangeNewEmployee("last_name", e.target.value)
+            }
+          />
+          <TextField
+            variant="outlined"
+            select
+            label="Status"
+            value={newEmployee.gender}
+            onChange={(e) => handleChangeNewEmployee("gender", e.target.value)}
+          >
+            <MenuItem value="female">Female</MenuItem>
+            <MenuItem value="male">Male</MenuItem>
+          </TextField>
+          <TextField
+            label="Date of Birth"
+            type="date"
+            variant="outlined"
+            value={newEmployee.date_of_birth}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) =>
+              handleChangeNewEmployee("date_of_birth", e.target.value)
+            }
+          />
+          <TextField
+            variant="outlined"
+            select
+            label="Status"
+            value={newEmployee.marital_status}
+            onChange={(e) =>
+              handleChangeNewEmployee("marital_status", e.target.value)
+            }
+          >
+            <MenuItem value="single">Single</MenuItem>
+            <MenuItem value="married">Married</MenuItem>
+            <MenuItem value="widow">Widow</MenuItem>
+          </TextField>
           <TextField
             autoFocus
             margin="dense"
@@ -300,22 +358,6 @@ export default function EmployeesTableList() {
           >
             <MenuItem value="Administrator">Administrator</MenuItem>
             <MenuItem value="Service Provider">Service Provider</MenuItem>
-          </TextField>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Position"
-            type="text"
-            fullWidth
-            value={newEmployee.position}
-            onChange={(e) =>
-              handleChangeNewEmployee("position", e.target.value)
-            }
-            select
-          >
-            <MenuItem value="Housekeeper">Housekeeper</MenuItem>
-            <MenuItem value="Nanny/Baby Sitter">Nanny/Baby Sitter</MenuItem>
-            <MenuItem value="Care Giver">Care Giver</MenuItem>
           </TextField>
           <TextField
             autoFocus
@@ -342,6 +384,17 @@ export default function EmployeesTableList() {
           <TextField
             autoFocus
             margin="dense"
+            label="City"
+            type="text"
+            fullWidth
+            value={newEmployee.city_municipality}
+            onChange={(e) =>
+              handleChangeNewEmployee("city_municipality", e.target.value)
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
             label="Province"
             type="text"
             fullWidth
@@ -350,6 +403,7 @@ export default function EmployeesTableList() {
               handleChangeNewEmployee("province", e.target.value)
             }
           />
+
           <TextField
             autoFocus
             margin="dense"
@@ -358,6 +412,28 @@ export default function EmployeesTableList() {
             fullWidth
             value={newEmployee.email}
             onChange={(e) => handleChangeNewEmployee("email", e.target.value)}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Temporary Password"
+            type="text"
+            fullWidth
+            value={newEmployee.password}
+            onChange={(e) =>
+              handleChangeNewEmployee("password", e.target.value)
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Confirm Temporary Password"
+            type="text"
+            fullWidth
+            value={newEmployee.password_confirmation}
+            onChange={(e) =>
+              handleChangeNewEmployee("password_confirmation", e.target.value)
+            }
           />
         </DialogContent>
         <DialogActions>
@@ -376,12 +452,68 @@ export default function EmployeesTableList() {
           <TextField
             autoFocus
             margin="dense"
-            label="Name"
+            label="First Name"
             type="text"
             fullWidth
-            value={editedEmployee.fullname}
+            value={editedEmployee.first_name}
             onChange={(e) =>
-              setEditedEmployee({ ...editedEmployee, fullname: e.target.value })
+              setEditedEmployee({
+                ...editedEmployee,
+                first_name: e.target.value,
+              })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Last Name"
+            type="text"
+            fullWidth
+            value={editedEmployee.last_name}
+            onChange={(e) =>
+              setEditedEmployee({
+                ...editedEmployee,
+                last_name: e.target.value,
+              })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Gender"
+            type="text"
+            fullWidth
+            value={editedEmployee.gender}
+            onChange={(e) =>
+              setEditedEmployee({ ...editedEmployee, gender: e.target.value })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Status"
+            type="text"
+            fullWidth
+            value={editedEmployee.marital_status}
+            onChange={(e) =>
+              setEditedEmployee({
+                ...editedEmployee,
+                marital_status: e.target.value,
+              })
+            }
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Date of Birth"
+            type="text"
+            fullWidth
+            value={editedEmployee.date_of_birth}
+            onChange={(e) =>
+              setEditedEmployee({
+                ...editedEmployee,
+                date_of_birth: e.target.value,
+              })
             }
           />
           <TextField
@@ -401,22 +533,6 @@ export default function EmployeesTableList() {
           >
             <MenuItem value="Administrator">Administrator</MenuItem>
             <MenuItem value="Service Provider">Service Provider</MenuItem>
-          </TextField>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Position"
-            type="text"
-            fullWidth
-            value={editedEmployee.position}
-            onChange={(e) =>
-              setEditedEmployee({ ...editedEmployee, position: e.target.value })
-            }
-            select
-          >
-            <MenuItem value="Housekeeper">Housekeeper</MenuItem>
-            <MenuItem value="Nanny/Baby Sitter">Nanny/Baby Sitter</MenuItem>
-            <MenuItem value="Care Giver">Care Giver</MenuItem>
           </TextField>
           <TextField
             autoFocus

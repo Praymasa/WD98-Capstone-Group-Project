@@ -15,24 +15,25 @@ import {
   Typography,
   TablePagination,
 } from "@mui/material";
-import { fetchClientsReservations } from "../servicesApi";
+import {
+  api,
+  fetchClientsReservations,
+  fetchReservations,
+} from "../servicesApi";
 
-interface ClientServiceTableProps {
-  res_id: string;
+interface Service {
+  id: string;
   service_id: number;
-  service_name: string;
+  service_title: string;
   term_id: number;
-  title: string;
-  date: string;
-  time: string;
+  term_title: string;
+  start_date: string;
+  start_time: string;
   status: string;
 }
 
-export default function ClientServiceTable({
-  service,
-}: {
-  service: ClientServiceTableProps[];
-}) {
+export default function ClientServiceTable() {
+  const [service, setServices] = useState<Service[]>([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [clientsReservations, setClientsReservations] = useState("");
@@ -40,8 +41,8 @@ export default function ClientServiceTable({
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await fetchClientsReservations();
-        setClientsReservations(data);
+        const response = await fetchReservations();
+        setClientsReservations(response.data);
       } catch (error) {
         console.error("Error fetching employees:", error);
       }
@@ -95,12 +96,12 @@ export default function ClientServiceTable({
             <TableBody>
               {service
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((service) => (
-                  <TableRow key={service.res_id}>
-                    <TableCell>{service.service_id}</TableCell>
-                    <TableCell>{service.term_id}</TableCell>
-                    <TableCell>{service.date}</TableCell>
-                    <TableCell>{service.time}</TableCell>
+                .map((service, index) => (
+                  <TableRow key={service.id}>
+                    <TableCell>{service.service_title}</TableCell>
+                    <TableCell>{service.term_title}</TableCell>
+                    <TableCell>{service.start_date}</TableCell>
+                    <TableCell>{service.start_time}</TableCell>
                     <TableCell>
                       <Stepper
                         activeStep={
@@ -123,12 +124,10 @@ export default function ClientServiceTable({
                       </Stepper>
                     </TableCell>
                     <TableCell>
-                      <Button onClick={() => handleEditService(service.res_id)}>
+                      <Button onClick={() => handleEditService(service.id)}>
                         Edit
                       </Button>
-                      <Button
-                        onClick={() => handleDeleteService(service.res_id)}
-                      >
+                      <Button onClick={() => handleDeleteService(service.id)}>
                         Delete
                       </Button>
                     </TableCell>

@@ -68,7 +68,7 @@ const routes = [
   },
   {
     name: "ClientDashboard",
-    path: "/clientdashboard",
+    path: "/clientdashboard/:id",
     element: <ClientDashboard />,
   },
   {
