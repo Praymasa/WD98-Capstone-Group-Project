@@ -351,31 +351,6 @@ export default function About(employee) {
           <BestEmployee />
         </Container>
       </Box>
-      <Box id="workforce" px={5} py={8}>
-        <Container>
-          <Typography
-            variant="h4"
-            className="bottom-line"
-            sx={{ textAlign: "center", marginBottom: 5 }}
-          >
-            <span>M</span>ember of the <span>W</span>orkforce
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{ textAlign: "center", marginBottom: 5 }}
-          >
-            Our experienced professionals specialize in housekeeping, child
-            care, and senior caregiving. Whether it's maintaining a clean and
-            organized living environment, creating a nurturing and stimulating
-            atmosphere for children, or offering compassionate support to the
-            elderly, our dedicated team prioritizes safety, well-being, and
-            personal attention. With attention to detail, knowledge of best
-            practices, and a commitment to building strong relationships, we
-            ensure a high standard of care for every member of your family.
-          </Typography>
-          <EmployeeList employee={employee} />
-        </Container>
-      </Box>
       <Box>
         <ScrollTop>
           <Button

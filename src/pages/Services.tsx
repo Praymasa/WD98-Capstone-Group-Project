@@ -261,7 +261,6 @@ export default function Services() {
                       <Typography variant="body2">
                         {nanny.description}
                       </Typography>
-                      <Button onClick={() => setOpen(true)}>Book Now</Button>
                     </CardContent>
                   </Card>
                 </Grid>
