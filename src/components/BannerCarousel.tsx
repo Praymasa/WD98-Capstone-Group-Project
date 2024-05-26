@@ -2,6 +2,7 @@ import { Box, Button, Paper, Typography } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { styled } from "@mui/material/styles";
 import "../pages/Services.css";
+import React from "react";
 
 const CarouselItem = styled(Paper)(({}) => ({
   display: "flex",
@@ -37,7 +38,7 @@ export default function BannerCarousel() {
         "Our housekeeping services guarantee a spotless and organized home. With our meticulous process, eco-friendly products, and attention to detail, we create a clean and inviting environment tailored to your needs.",
       image: "../../public/Images/housekeeping/Do-Good-Cleaning-banner.jpg",
       buttonLabel: "Book Now!",
-      buttonLink: "/",
+      buttonLink: "/reservations",
     },
     {
       title: "Child Care",
@@ -46,7 +47,7 @@ export default function BannerCarousel() {
         "Our dedicated team of Nannies/Baby Sitter prioritize your child's safety, development, and happiness. Through engaging activities, personalized attention, and a warm atmosphere, we ensure your child receives the best care possible.",
       image: "../../public/Images/ChildCare/nanny-banner.png",
       buttonLabel: "Book Now!",
-      buttonLink: "/",
+      buttonLink: "/reservations",
     },
     {
       title: "Senior Care",
@@ -55,7 +56,7 @@ export default function BannerCarousel() {
         "Dedicated to dignified care, we provide personalized senior care services. Our compassionate team focuses on comfort, safety, and promoting independence, ensuring your loved ones feel valued and respected.",
       image: "../../public/Images/SeniorCare/SeniorCare-banner.jpg",
       buttonLabel: "Book Now!",
-      buttonLink: "/",
+      buttonLink: "/reservations",
     },
   ];
 
@@ -66,7 +67,7 @@ export default function BannerCarousel() {
           {items.map((item, index) => (
             <CarouselItem
               key={index}
-              sx={{ height: { xs: 400, md: 850 }, opacity: 1 }}
+              sx={{ height: { xs: 400, md: 900 }, opacity: 1 }}
             >
               <Image src={item.image} alt="Carousel Image" />
               <Box

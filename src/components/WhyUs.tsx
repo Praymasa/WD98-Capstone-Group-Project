@@ -84,40 +84,42 @@ export default function WhyUs() {
             our caring team by your side, together we can conquer challenges,
             accomplish each other's goals, and thrive.
           </Typography>
+          <Avatar
+            variant="square"
+            src={HomeCare}
+            className="why-img"
+            sx={{
+              height: { xs: "100%", sm: "50%", xl: "30%" },
+              width: { xs: "100%", sm: "50%", xl: "30%" },
+              objectFit: "cover",
+              float: "right",
+            }}
+          />
+
+          <Box
+            className="why"
+            sx={{
+              marginLeft: { xs: "0", md: 3 },
+              marginTop: { xs: 1, md: 3 },
+            }}
+          >
+            {whyUsItems.map((item, index) => (
+              <Box
+                key={index}
+                data-aos="fade-right"
+                data-aos-offset="300"
+                data-aos-easing="ease-in-sine"
+              >
+                <Typography variant="h6" gutterBottom>
+                  <b>{item.title}</b>
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  {item.description}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
         </Container>
-
-        <Avatar
-          variant="square"
-          src={HomeCare}
-          className="why-img"
-          sx={{
-            height: { xs: "100%", sm: "50%", xl: "30%" },
-            width: { xs: "100%", sm: "50%", xl: "30%" },
-            objectFit: "cover",
-            float: "right",
-          }}
-        />
-
-        <Box
-          className="why"
-          sx={{ marginLeft: { xs: "0", md: 3 }, marginTop: { xs: 1, md: 3 } }}
-        >
-          {whyUsItems.map((item, index) => (
-            <Box
-              key={index}
-              data-aos="fade-right"
-              data-aos-offset="300"
-              data-aos-easing="ease-in-sine"
-            >
-              <Typography variant="h6" gutterBottom>
-                <b>{item.title}</b>
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                {item.description}
-              </Typography>
-            </Box>
-          ))}
-        </Box>
       </Box>
     </>
   );

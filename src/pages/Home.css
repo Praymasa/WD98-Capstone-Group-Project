@@ -100,7 +100,6 @@
 }
 
 #why {
-    background-image: url(../../public/Images/empty-room-bg.jpg);
     min-height: 500px;
     width: 100%;
     background-attachment: fixed;

@@ -79,7 +79,16 @@ const routes = [
   {
     name: "Reservations",
     path: "/reservations",
-    element: <Reservations />,
+    element: (
+      <Reservations
+        open={false}
+        onClose={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+        services={[]}
+        terms={[]}
+      />
+    ),
   },
   {
     name: "Clients",

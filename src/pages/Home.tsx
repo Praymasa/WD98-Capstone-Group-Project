@@ -90,20 +90,6 @@ export default function Home() {
                 <span>Your</span> Home, Our <span>Care</span>.
               </Typography>
 
-              <Button
-                onClick={handleBookingModalOpen}
-                variant="contained"
-                color="secondary"
-                sx={{
-                  alignSelf: "flex-end",
-                  marginRight: 6,
-                  mb: 5,
-                  boxShadow: "5px 5px #4e4d66",
-                }}
-              >
-                Book a Service Now!
-              </Button>
-
               <Grid container spacing={2} sx={{ mt: "auto" }}>
                 <Grid item>
                   <Button
@@ -151,81 +137,66 @@ export default function Home() {
           overflow: "auto",
         }}
       >
-        <Typography
-          variant="h4"
-          className="bottom-line"
-          sx={{
-            visibility: { xs: "visible", md: "hidden" },
-            my: 2,
-          }}
-        >
-          Here To Help to be at <span>Y</span>our<span>B</span>est.
-        </Typography>
+        <Container>
+          <Typography
+            variant="h4"
+            className="bottom-line"
+            sx={{
+              textAlign: "center",
+              my: 2,
+            }}
+          >
+            Here To Help to be at <span>Y</span>our<span>B</span>est.
+          </Typography>
 
-        <Grid container p={5}>
-          <Grid item xs={12} sm={6}></Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography
-              variant="body1"
-              sx={{
-                marginTop: { xs: 2, xl: 10 },
-                marginLeft: { xs: 0, lg: 5 },
-                marginBottom: 5,
-                maxWidth: 500,
-              }}
-            >
-              <span className="family-word">Family Life</span> is challenging,
-              and so, too, is the role mothers and fathers play at work and at
-              home. Juggling to the roles as a parent, partner, employee, and
-              household manager is a delicate balancing act. From prioritizing
-              tasks to maintaining communication and finding time for self-care,
-              navigating these responsibilities requires finesse.
-            </Typography>
-            <br />
-            <Typography
-              variant="h4"
-              className="bottom-line"
-              data-aos="zoom-in-up"
-              data-aos-offset="100"
-              sx={{
-                display: "inline",
-                visibility: { xs: "hidden", md: "visible" },
-                position: { xs: "absolute", md: "relative" },
-                marginLeft: { xs: 0, lg: 20 },
-              }}
-            >
-              Here To Help to be at <span>Y</span>our<span>B</span>est.
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                marginLeft: { xs: 0, lg: 30 },
-                marginTop: 5,
-                maxWidth: 700,
-              }}
-            >
-              We offer{" "}
-              <HashLink to={"/services#housekeeping"} className="hashlink">
-                Housekeeping
-              </HashLink>{" "}
-              ,{" "}
-              <HashLink to={"/services#childcare"} className="hashlink">
-                Child Care
-              </HashLink>
-              , and{" "}
-              <HashLink to={"/services#seniorcare"} className="hashlink">
-                Senior Care
-              </HashLink>{" "}
-              services to ease the burden of managing multiple responsibilities.
-              By outsourcing these tasks to our professionals, you can reclaim
-              valuable time to focus on work, family, and personal well-being.
-              Our services not only ensure a clean and organized living
-              environment but also provide expert care for children and seniors,
-              offering peace of mind and support for busy individuals balancing
-              numerous roles.
-            </Typography>
+          <Grid container p={5}>
+            <Grid item xs={12} sm={6}></Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography
+                variant="body1"
+                sx={{
+                  marginTop: { xs: 2, xl: 10 },
+                  marginBottom: 5,
+                  maxWidth: 500,
+                }}
+              >
+                <span className="family-word">Family Life</span> is challenging,
+                and so, too, is the role mothers and fathers play at work and at
+                home. Juggling to the roles as a parent, partner, employee, and
+                household manager is a delicate balancing act. From prioritizing
+                tasks to maintaining communication and finding time for
+                self-care, navigating these responsibilities requires finesse.
+              </Typography>
+              <br />
+              <Typography
+                variant="body1"
+                sx={{
+                  maxWidth: 700,
+                }}
+              >
+                We offer{" "}
+                <HashLink to={"/services#housekeeping"} className="hashlink">
+                  Housekeeping
+                </HashLink>{" "}
+                ,{" "}
+                <HashLink to={"/services#childcare"} className="hashlink">
+                  Child Care
+                </HashLink>
+                , and{" "}
+                <HashLink to={"/services#seniorcare"} className="hashlink">
+                  Senior Care
+                </HashLink>{" "}
+                services to ease the burden of managing multiple
+                responsibilities. By outsourcing these tasks to our
+                professionals, you can reclaim valuable time to focus on work,
+                family, and personal well-being. Our services not only ensure a
+                clean and organized living environment but also provide expert
+                care for children and seniors, offering peace of mind and
+                support for busy individuals balancing numerous roles.
+              </Typography>
+            </Grid>
           </Grid>
-        </Grid>
+        </Container>
       </Box>
 
       <WhyUs />
