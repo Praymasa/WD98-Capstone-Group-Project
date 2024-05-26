@@ -85,7 +85,7 @@ const quickLinks = [
   { label: "Testimonials and Reviews", path: "" },
   { label: "Locations", path: "/locations" },
   { label: "Contact Us", path: "/contact" },
-  { label: "For Our Employee", path: "/admindashboard" },
+  { label: "For Our Employee", path: "/" },
 ];
 
 const services = [
